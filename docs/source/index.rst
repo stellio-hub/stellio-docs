@@ -1,6 +1,3 @@
-Stellio context broker
-======================
-
 |License: Apache-2.0|
 
 Stellio is an NGSI-LD compliant context broker developed by EGM.
@@ -8,17 +5,8 @@ Stellio is an NGSI-LD compliant context broker developed by EGM.
 NGSI-LD is an Open API and Datamodel specification for context management
 `published by ETSI <https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.02.02_60/gs_CIM009v010202p.pdf>`__.
 
-Content
--------
-
--  `Overview <#overview>`__
--  `Quick start <#quick-start>`__
--  `Development <#development>`__
--  `Usage <#usage>`__
--  `License <#license>`__
-
 Overview
---------
+========
 
 Stellio is composed of 3 business services:
 
@@ -42,7 +30,7 @@ The services are based on the `Spring Boot <https://spring.io/projects/spring-bo
 developed in `Kotlin <https://kotlinlang.org>`__, and built with `Gradle <https://gradle.org>`__.
 
 Quick start
------------
+===========
 
 A quick way to start using Stellio is to use the provided ``docker-compose.yml`` file in the root 
 directory (feel free to change the default passwords defined in the ``.env`` file):
@@ -65,10 +53,10 @@ Please note that the environment and scripts are validated on Ubuntu
 Docker images are available on `Docker Hub <https://hub.docker.com/orgs/stellio/repositories>`__.
 
 Development
------------
+===========
 
 Developing on a service
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 Requirements:
 
@@ -90,7 +78,7 @@ Then, from the root directory, launch the service:
    ./gradlew entity-service:bootRun
 
 Running the tests
-~~~~~~~~~~~~~~~~~
+-----------------
 
 Each service has a suite of unit and integration tests. You can run them without manually 
 launching any external component, thanks to Spring Boot embedded test support and to the great
@@ -104,7 +92,7 @@ following command:
    ./gradlew entity-service:test
 
 Building the project
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 To build all the services, you can just launch:
 
@@ -124,7 +112,7 @@ If you want to build only one of the services, you can launch:
    ./gradlew entity-service:build
 
 Working locally with Docker images
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------
 
 To work locally with a Docker image of a service without publishing it
 to Docker Hub, you can follow the below instructions:
@@ -158,7 +146,7 @@ As the development environment does not make use of the authentication setup, yo
 API quick guide.
 
 License
--------
+=======
 
 Stellio is licensed under
 `APL-2.0 <https://spdx.org/licenses/Apache-2.0.html>`__.
