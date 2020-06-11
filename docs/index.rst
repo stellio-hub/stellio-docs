@@ -12,6 +12,14 @@ Welcome to Stellio's documentation!
 
    source/index
 
+Migrations notes
+===================================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   source/migrations/index
 
 Indices and tables
 ==================
