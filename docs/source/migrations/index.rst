@@ -5,4 +5,4 @@ Neo4j Migrations
    :maxdepth: 2
    :caption: Contents:
 
-   neo4jMigrations
+   neo4j-migrations
