@@ -16,10 +16,11 @@ Migrations notes
 ===================================
 
 .. toctree::
-   :maxdepth: 2
+   :titlesonly:
+   :maxdepth: 3
    :caption: Contents:
 
-   source/migrations/index
+   source/migrations/0.7.0/index
 
 Indices and tables
 ==================

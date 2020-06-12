@@ -1,6 +1,11 @@
+###############
+Neo4j migration
+###############
+
+
 This note describes the necessary steps to migrate a single instance from `Neo4j <https://neo4j.com/>`__ 3.5.x to `Neo4j <https://neo4j.com/>`__ 4.0.x
 
-Upgrading To Neo4j 4.0.x From A 3.5.x Version
+Upgrading to neo4j 4.0.x from a 3.5.x version
 =============================================
 
 -  Backup:
@@ -45,7 +50,7 @@ Make a copy of this directory.
 
 Note: Please consider that the 4.x version add support for multiple databases that follow a naming convention without special characters including dots.
 
-4- In the entity service, recreate the neo4j container by running:
+4- In the entity service folder, recreate the neo4j container by running:
 
 .. code-block:: shell
 
@@ -65,6 +70,8 @@ and removing the ``neostore.transaction.db.0`` file under the new ``stellio`` fo
 
     docker-compose up -d
 
-Browser Connection To Neo4j
+In case you encounter any problem during the migration process, please do create an issue on `Github <https://github.com/stellio-hub/stellio-context-broker/>`__
+
+Browser connection to neo4j
 ===========================
 For browser connection to Neo4j, please make sure that the Connect URL uses the bolt protocol.
