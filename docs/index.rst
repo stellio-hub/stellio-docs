@@ -12,6 +12,14 @@ Welcome to Stellio's documentation!
 
    source/index
 
+Upgrading
+=========
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Contents:
+
+   source/upgrading/0.7.0/index
 
 Indices and tables
 ==================
