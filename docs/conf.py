@@ -54,5 +54,5 @@ html_static_path = ['_static']
 
 # Add Fiware css stylesheet
 def setup(app):
-    app.add_stylesheet('css/fiware_readthedocs.css')
-    app.add_stylesheet('css/fiware_readthedocs_core.css')
+    app.add_css_file('https://www.fiware.org/style/fiware_readthedocs.css')
+    app.add_css_file('https://www.fiware.org/style/fiware_readthedocs_core.css')
