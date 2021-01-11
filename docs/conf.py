@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Stellio'
-copyright = '2020, Easy Global Market'
-author = 'Easy Global Market'
+copyright = '2020 - 2021, EGM'
+author = 'EGM'
 
 
 # -- General configuration ---------------------------------------------------
