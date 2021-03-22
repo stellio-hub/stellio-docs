@@ -14,6 +14,9 @@ nav:
   - Home: index.md
   - Getting Started: 'quick_start_guide.md'
   - User & Programmers Manual:
+      - Visualizing the graph: 'user/visualizing_graph.md'
       - Data model: 'user/data_model.md'
   - Installation & Administration Manual:
-      - Upgrading from previous to 0.7.0: 'admin/upgrading_to_0.7.0.md'
+      - Upgrading:
+        - General notes: 'admin/upgrading_general_notes.md'
+        - Upgrading to 0.7.0: 'admin/upgrading_to_0.7.0.md'
