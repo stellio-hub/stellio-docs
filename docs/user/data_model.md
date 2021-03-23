@@ -7,6 +7,7 @@ In this section, we briefly remind main basics of the NGSI-LD data models. The s
 # NGSI-LD Data Model
 
 An NGSI-LD entity is composed of:
+
 - **id** (mandatory): The identifier of the Entity (URI format).
 - **type** (mandatory): The type of the Entity
 - **Properties** (optional)
@@ -14,6 +15,7 @@ An NGSI-LD entity is composed of:
 - **@context** (mandatory): JSON-LD specification for linked data.
 
 A property in NGSI-LD is composed of
+
 - **type** (mandatory): `Property` or `GeoProperty`
 - **value** (mandatory)
 - **unitCode** (optional): The unit of the value in [CEFACT](https://www.unece.org/cefact/codesfortrade/codes_index.html) format.
@@ -21,6 +23,7 @@ A property in NGSI-LD is composed of
 - **Relationships** (optional)
 
 A relationship in NGSI-LD is composed of
+
 - **type** (mandatory): `Relationship`
 - **object** (mandatory): The URI of the target Entity.
 - **Properties** (optional)
@@ -87,6 +90,7 @@ The graphical presentation of the Vehicle Entity is depicted in the Figure Below
 ![](images/vehicle-ngsild.jpg)
 
 Following the mapping approach proposed in `Stellio`:
+
 - A (vehicle) node is generated for the `Vehicle` Entity,
 - A (property) node is generated for the color Property,
 - A (relationship) node is generated for the `isParkedIn` Relationship,
