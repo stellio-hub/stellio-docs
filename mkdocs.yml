@@ -14,6 +14,7 @@ nav:
   - Home: index.md
   - Getting Started: 'quick_start_guide.md'
   - User & Programmers Manual:
+      - Authentication and authorization: 'user/authentication_and_authorization.md'
       - Visualizing the graph: 'user/visualizing_graph.md'
       - Data model: 'user/data_model.md'
   - Installation & Administration Manual:
