@@ -18,6 +18,7 @@ nav:
       - Visualizing the graph: 'user/visualizing_graph.md'
       - Data model: 'user/data_model.md'
   - Installation & Administration Manual:
+      - Production deployment: 'admin/production_deployment.md'
       - Monitoring and logging: 'admin/monitoring_and_logging.md'
       - Upgrading:
         - General notes: 'admin/upgrading_general_notes.md'
