@@ -27,7 +27,7 @@ export CONTEXT_LINK="<https://raw.githubusercontent.com/easy-global-market/ngsil
 This case study is written for anyone who wants to get familiar with the API, we use a real example to make it more concrete.
 
 We will create the following entities:
-#### Beekeeper.jsonld
+Beekeeper.jsonld
 ```json
 {
    "id":"urn:ngsi-ld:Beekeeper:01",
@@ -41,7 +41,7 @@ We will create the following entities:
    ]
 }
 ```
-#### Apiary.jsonld
+Apiary.jsonld
 ```json
 {
    "id":"urn:ngsi-ld:Apiary:01",
@@ -65,7 +65,7 @@ We will create the following entities:
    ]
 }
 ```
-#### Sensor_temperature.jsonld
+Sensor_temperature.jsonld
 ```json
 {
    "id": "urn:ngsi-ld:Sensor:02",
@@ -79,7 +79,7 @@ We will create the following entities:
    ]
 }
 ```
-#### Sensor_humidity.jsonld
+Sensor_humidity.jsonld
 ```json
 {
    "id": "urn:ngsi-ld:Sensor:01",
@@ -93,7 +93,7 @@ We will create the following entities:
    ]
 }
 ```
-#### Beehive.jsonld
+Beehive.jsonld
 ```json
 {
    "id": "urn:ngsi-ld:BeeHive:01",
@@ -170,7 +170,7 @@ http DELETE http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01
 http POST http://localhost:8080/ngsi-ld/v1/entityOperations/create Content-Type:application/ld+json < apiculture_entities.jsonld
 ```
 
-#### apiculture_entities.jsonld
+apiculture_entities.jsonld
 ```json
 [
     {
@@ -369,7 +369,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs
     Link:$CONTEXT_LINK < beehive_addName.json
 ```
 
-#### beehive_addName.json
+beehive_addName.json
 ```json
 {
    "name":{
@@ -391,7 +391,7 @@ http DELETE http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/att
 http POST http://localhost:8080/ngsi-ld/v1/subscriptions Content-Type:application/ld+json < subscription_to_beehive.jsonld
 ```
 
-#### subscription_to_beehive.jsonld
+subscription_to_beehive.jsonld
 ```json
 {
   "id":"urn:ngsi-ld:Subscription:01",
@@ -429,7 +429,7 @@ http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attr
     Link:$CONTEXT_LINK < beehive_updateTemperature.json
 ```
 
-#### beehive_updateTemperature.json
+beehive_updateTemperature.json
 ```json
 {
    "temperature": {
@@ -484,7 +484,7 @@ http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attr
     Link:$CONTEXT_LINK < beehive_updateHumidity.json
 ```
 
-#### beehive_updateHumidity.json
+beehive_updateHumidity.json
 ```json
 {
    "humidity": {
@@ -556,7 +556,7 @@ Sample payload returned showing the temporal evolution of temperature and humidi
 http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
     Link:$CONTEXT_LINK < beehive_secondTemperatureUpdate.json
 ```
-#### beehive_secondTemperatureUpdate.json
+beehive_secondTemperatureUpdate.json
 
 ```json
 {
