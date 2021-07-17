@@ -206,6 +206,17 @@ http POST http://localhost:8080/ngsi-ld/v1/entityOperations/create Content-Type:
         ]
     },
     {
+        "id": "urn:ngsi-ld:Sensor:01",
+        "type": "Sensor",
+        "deviceParameter":{
+                "type":"Property",
+                "value":"humidity"
+        },
+        "@context": [
+            "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+        ]
+    },
+    {
         "id": "urn:ngsi-ld:Sensor:02",
         "type": "Sensor",
         "deviceParameter":{
@@ -326,7 +337,7 @@ http http://localhost:8080/ngsi-ld/v1/entities type==BeeHive Link:$CONTEXT_LINK
 * Adding the options `KeyValues` to the parameter of a get query will return a reduced version of the Entity providing only top level attribute and their value or object.
 
 ```shell
-http http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01  \ options==keyValues \ Link:$CONTEXT_LINK
+http http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01  options==keyValues Link:$CONTEXT_LINK
 ```
 Sample payload returned showing a reduced version of the entity BeeHive:
 
@@ -349,7 +360,6 @@ Sample payload returned showing a reduced version of the entity BeeHive:
         "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
     ]
 }
-
 ```
 
 * Let's add a name to the created beehive:
@@ -359,7 +369,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs
     Link:$CONTEXT_LINK < beehive_addName.json
 ```
 
-    -beehive_addName.json
+#### beehive_addName.json
 ```json
 {
    "name":{
@@ -375,14 +385,13 @@ http POST http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs
 http DELETE http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs/name Link:$CONTEXT_LINK
 ```
 
-* Let's create a subscription to the beehive that sends a notification when the temperature exceeds 40. To do so we need a working `endpoint` params in order to receive the notification related to the subscription. For this example, we are using Post Server V2 [http://ptsv2.com/](http://ptsv2.com/). This is a free public service and have to be used only for tests and debugs. You need to configure your appropriate working `endpoint` for your private data.
-
+* Let's create a subscription on the Beehive entity. We would like to be notified when the temperature of the BeeHive exceeds 40. To do so, we need a working `endpoint` in order to receive the notification related to the subscription. For this example, we are using Post Server V2 [http://ptsv2.com/](http://ptsv2.com/). This is a free public service. It is used only for tests and debugs. You need to configure your appropriate working `endpoint` for your private data.
 
 ```shell
 http POST http://localhost:8080/ngsi-ld/v1/subscriptions Content-Type:application/ld+json < subscription_to_beehive.jsonld
 ```
 
-    - subscription_to_beehive.jsonld
+#### subscription_to_beehive.jsonld
 ```json
 {
   "id":"urn:ngsi-ld:Subscription:01",
@@ -413,14 +422,14 @@ http POST http://localhost:8080/ngsi-ld/v1/subscriptions Content-Type:applicatio
 http http://localhost:8080/ngsi-ld/v1/subscriptions/urn:ngsi-ld:Subscription:01 Link:$CONTEXT_LINK
 ```
 
-* By updating temperature with a value grater then 40, using the following query:
+* We can update the temperature with a value grater then 40, using the following query:
 
 ```shell
 http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
     Link:$CONTEXT_LINK < beehive_updateTemperature.json
 ```
 
-    - beehive_updateTemperature.json
+#### beehive_updateTemperature.json
 ```json
 {
    "temperature": {
@@ -436,7 +445,8 @@ http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attr
 }
 ```
 
- The body of the notification query sent to the endpoint URI is:
+ The previous update query will trigger sending notification to the configured endpoint. The body of the notification query sent to the endpoint URI is:
+
 ```json
 {
     "id": "urn:ngsi-ld:Notification:65925510-b64c-4bfa-942d-395803a9a784",
@@ -473,7 +483,8 @@ http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attr
 http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
     Link:$CONTEXT_LINK < beehive_updateHumidity.json
 ```
-    - beehive_updateHumidity.json
+
+#### beehive_updateHumidity.json
 ```json
 {
    "humidity": {
@@ -545,7 +556,7 @@ Sample payload returned showing the temporal evolution of temperature and humidi
 http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
     Link:$CONTEXT_LINK < beehive_secondTemperatureUpdate.json
 ```
-    - beehive_secondTemperatureUpdate.json
+#### beehive_secondTemperatureUpdate.json
 
 ```json
 {
