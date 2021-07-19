@@ -13,7 +13,7 @@ extra_css: ["https://www.fiware.org/style/fiware_readthedocs.css", "https://www.
 nav:
   - Home: index.md
   - Getting Started: 'quick_start_guide.md'
-  - API Walk Through: 'API_walkthrough.md'
+  - API Walkthrough: 'API_walkthrough.md'
   - User & Programmers Manual:
       - Authentication and authorization: 'user/authentication_and_authorization.md'
       - Visualizing the graph: 'user/visualizing_graph.md'
