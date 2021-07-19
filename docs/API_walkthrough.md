@@ -437,7 +437,7 @@ http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attr
 '
 ```
 
-* We can also update the beehive humidity:
+* We can also update the humidity of the beehive:
 
 ```shell
 http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
