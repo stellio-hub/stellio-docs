@@ -304,7 +304,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entityOperations/create Content-Type:
 
 ### Get Types and Type of Entities
 
-* All available types of entities can be retrived:
+* All available types of entities can be retrieved:
 ```shell
 http http://localhost:8080/ngsi-ld/v1/types
 ```
