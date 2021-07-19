@@ -351,7 +351,7 @@ Sample payload returned showing more details about the entity Beekeeper:
 }
 ```
 
-### Get Entities
+### Query Entities
 
 * The created beehive can be retrieved by id:
 
