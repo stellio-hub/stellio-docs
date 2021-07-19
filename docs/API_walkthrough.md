@@ -6,7 +6,7 @@ This quickstart guide shows a real use case scenario of interaction with the API
 
 The provided examples make use of the HTTPie command line tool (installation instructions: https://httpie.org/docs#installation)
 
-All requests are grouped in a Postman collection that can be found [here](collection/API_Quick_Start.postman_collection.json).
+All requests are grouped in a Postman collection that can be found [here](https://github.com/stellio-hub/stellio-docs/blob/master/API_Quick_Start.postman_collection.json).
 For more details about how to import a Postman collection see https://learning.postman.com/docs/getting-started/importing-and-exporting-data/.
 
 Export the link to the JSON-LD context used in this use case in an environment variable for easier referencing in
@@ -611,7 +611,7 @@ http POST http://localhost:8080/ngsi-ld/v1/subscriptions Content-Type:applicatio
 http http://localhost:8080/ngsi-ld/v1/subscriptions/urn:ngsi-ld:Subscription:01 Link:$CONTEXT_LINK
 ```
 
-Running The previous partial update [query](#partial-attributes-updates) (after the creation of the subscription), will trigger sending notification to the configured endpoint. The body of the notification query sent to the endpoint URI is:
+Running the previous partial update [query](#partial-attributes-updates) (after the creation of the subscription), will trigger sending notification to the configured endpoint. The body of the notification query sent to the endpoint URI is:
 
 ```json
 {
