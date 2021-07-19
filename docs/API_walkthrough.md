@@ -6,14 +6,8 @@ This quickstart guide shows a real use case scenario of interaction with the API
 
 The provided examples make use of the HTTPie command line tool (installation instructions: https://httpie.org/docs#installation)
 
-All requests are grouped in a Postman collection that can be found [here](samples/API_Quick_Start.postman_collection.json).
+All requests are grouped in a Postman collection that can be found [here](collection/API_Quick_Start.postman_collection.json).
 For more details about how to import a Postman collection see https://learning.postman.com/docs/getting-started/importing-and-exporting-data/.
-
-Start a Stellio instance. You can use the provided Docker compose configuration in this directory:
-
-```shell
-docker-compose -f docker-compose.yml up -d && docker-compose -f docker-compose.yml logs -f
-```
 
 Export the link to the JSON-LD context used in this use case in an environment variable for easier referencing in
 the requests:
@@ -22,13 +16,44 @@ the requests:
 export CONTEXT_LINK="<https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld>; rel=http://www.w3.org/ns/json-ld#context; type=application/ld+json"
 ````
 
+## Starting the Stellio Context Broker
+The Stellio Contex Broker source code can be found here : https://github.com/stellio-hub/stellio-context-broker
+
+To Start a Stellio instance. You can use the provided Docker compose configuration:
+
+```shell
+http GET https://raw.githubusercontent.com/stellio-hub/stellio-context-broker/develop/docker-compose.yml
+```
+and then start the container with:
+```shell
+docker-compose -f docker-compose.yml up -d && docker-compose -f docker-compose.yml logs -f
+```
+
 ## Case study
 
 This case study is written for anyone who wants to get familiar with the API, we use a real example to make it more concrete.
 
 We will create the following entities:
-Beekeeper.jsonld
-```json
+
+- Beekeeper
+
+- Apiary
+
+- Sensor_temperature.jsonld
+
+- Sensor_humidity.jsonld
+
+- Beehive.jsonld
+
+
+## Queries
+
+### Create Entities
+
+* Create the beekeeper entity:
+
+```shell
+http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+json <<< '
 {
    "id":"urn:ngsi-ld:Beekeeper:01",
    "type":"Beekeeper",
@@ -40,9 +65,12 @@ Beekeeper.jsonld
       "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
    ]
 }
+'
 ```
-Apiary.jsonld
-```json
+
+* Create the Apiary entity:
+```shell
+http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+json <<< '
 {
    "id":"urn:ngsi-ld:Apiary:01",
    "type":"Apiary",
@@ -64,9 +92,12 @@ Apiary.jsonld
       "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
    ]
 }
+'
 ```
-Sensor_temperature.jsonld
-```json
+
+* Create the Sensor_temperature entity:
+```shell
+http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+json <<< '
 {
    "id": "urn:ngsi-ld:Sensor:02",
    "type": "Sensor",
@@ -78,9 +109,12 @@ Sensor_temperature.jsonld
       "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
    ]
 }
+'
 ```
-Sensor_humidity.jsonld
-```json
+
+* Create the Sensor_humidity entity:
+```shell
+http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+json <<< '
 {
    "id": "urn:ngsi-ld:Sensor:01",
    "type": "Sensor",
@@ -92,9 +126,12 @@ Sensor_humidity.jsonld
       "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
    ]
 }
+'
 ```
-Beehive.jsonld
-```json
+
+* Create the Beehive entity:
+```shell
+http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+json <<< '
 {
    "id": "urn:ngsi-ld:BeeHive:01",
    "type": "BeeHive",
@@ -140,19 +177,10 @@ Beehive.jsonld
       "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
    ]
 }
+'
 ```
 
-## Queries
-
-* We start by creating the beekeeper, the apiary, the beehive and sensors:
-
-```shell
-http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+json < Beekeeper.jsonld
-http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+json < apiary.jsonld
-http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+json < Sensor_temperature.jsonld
-http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+json < Sensor_humidity.jsonld
-http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+json < Beehive.jsonld
-```
+### Delete Entities
 
 * We can delete the created entities (optional):
 
@@ -164,14 +192,12 @@ http DELETE http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:Sensor:02
 http DELETE http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01
 ```
 
+### Batch Create Entities
+
 * We can recreate them in batch (optional):
 
 ```shell
-http POST http://localhost:8080/ngsi-ld/v1/entityOperations/create Content-Type:application/ld+json < apiculture_entities.jsonld
-```
-
-apiculture_entities.jsonld
-```json
+http POST http://localhost:8080/ngsi-ld/v1/entityOperations/create Content-Type:application/ld+json <<<'
 [
     {
         "id":"urn:ngsi-ld:Beekeeper:01",
@@ -273,7 +299,10 @@ apiculture_entities.jsonld
         ]
     }
 ]
+'
 ```
+
+### Get Types and Type of Entities
 
 * All available types of entities can be retrived:
 ```shell
@@ -322,6 +351,8 @@ Sample payload returned showing more details about the entity Beekeeper:
 }
 ```
 
+### Get Entities
+
 * The created beehive can be retrieved by id:
 
 ```shell
@@ -362,21 +393,20 @@ Sample payload returned showing a reduced version of the entity BeeHive:
 }
 ```
 
+### Append Attributes on Entities
+
 * Let's add a name to the created beehive:
 
 ```shell
 http POST http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
-    Link:$CONTEXT_LINK < beehive_addName.json
-```
-
-beehive_addName.json
-```json
+    Link:$CONTEXT_LINK <<<'
 {
    "name":{
       "type":"Property",
       "value":"BeeHiveSophia"
    }
 }
+'
 ```
 
 * The recently added name property can be deleted:
@@ -385,14 +415,172 @@ beehive_addName.json
 http DELETE http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs/name Link:$CONTEXT_LINK
 ```
 
+### Partial Attributes Updates
+
+* We can update the temperature with a value grater then 40, using the following query:
+
+```shell
+http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
+    Link:$CONTEXT_LINK <<<'
+{
+   "temperature": {
+     "type": "Property",
+     "value": 42,
+     "unitCode": "CEL",
+     "observedAt": "2019-10-26T22:35:52.98601Z",
+     "observedBy": {
+        "type": "Relationship",
+        "object": "urn:ngsi-ld:Sensor:01"
+     }
+   }
+}
+'
+```
+
+* We can also update the beehive humidity:
+
+```shell
+http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
+    Link:$CONTEXT_LINK <<<'
+{
+   "humidity": {
+     "type": "Property",
+     "value": 58,
+     "unitCode": "P1",
+     "observedAt": "2019-10-26T21:35:52.98601Z",
+     "observedBy": {
+        "type": "Relationship",
+        "object": "urn:ngsi-ld:Sensor:02"
+     }
+  }
+}
+'
+```
+
+### Get Temporal Evolution of Attributes
+
+* Since we updated both temperature and humidity, we can get the temporal evolution of those properties:
+
+```shell
+http http://localhost:8080/ngsi-ld/v1/temporal/entities/urn:ngsi-ld:BeeHive:01 \
+    timerel==between \
+    time==2019-10-25T12:00:00Z \
+    endTime==2021-10-27T12:00:00Z \
+    Link:$CONTEXT_LINK
+```
+
+Sample payload returned showing the temporal evolution of temperature and humidity properties:
+
+```json
+{
+    "id": "urn:ngsi-ld:BeeHive:01",
+    "type": "BeeHive",
+    "humidity": [
+        {
+            "instanceId": "urn:ngsi-ld:Instance:a768ffb8-79e0-488f-9a4c-e7217ba2dff4",
+            "observedAt": "2019-10-26T21:35:52.986010Z",
+            "type": "Property",
+            "value": 58.0
+        },
+        {
+            "instanceId": "urn:ngsi-ld:Instance:28e44b9e-86f5-4bbb-a363-718d849d1782",
+            "observedAt": "2019-10-26T21:32:52.986010Z",
+            "type": "Property",
+            "value": 60.0
+        }
+    ],
+    "temperature": [
+        {
+            "instanceId": "urn:ngsi-ld:Instance:33642ff7-9b66-42c4-bcdf-9ca640cba782",
+            "observedAt": "2019-10-26T22:35:52.986010Z",
+            "type": "Property",
+            "value": 42.0
+        },
+        {
+            "instanceId": "urn:ngsi-ld:Instance:73226f04-1c47-49a6-ab88-976cb7493bea",
+            "observedAt": "2019-10-26T21:32:52.986010Z",
+            "type": "Property",
+            "value": 22.2
+        }
+    ],
+    "@context": [
+        "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+    ]
+}
+```
+
+* Let's update again the temperature property of the beehive:
+
+```shell
+http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
+    Link:$CONTEXT_LINK <<< '
+{
+   "temperature": {
+     "type": "Property",
+     "value": 100,
+     "unitCode": "CEL",
+     "observedAt": "2020-05-10T10:20:30.98601Z",
+     "observedBy": {
+        "type": "Relationship",
+        "object": "urn:ngsi-ld:Sensor:01"
+     }
+   }
+}
+'
+```
+
+* We can get the simplified temporal representation of the temperature property of the beehive by adding the field `option` with the value `temporalValues` with the paramters of the query:
+
+```shell
+http http://localhost:8080/ngsi-ld/v1/temporal/entities/urn:ngsi-ld:BeeHive:01?options=temporalValues \
+    option==temporalValues \
+    attrs==temperature \ 
+    timerel==between \
+    time==2019-10-25T12:00:00Z \
+    endTime==2020-10-27T12:00:00Z \
+    Link:$CONTEXT_LINK
+```
+
+The sample payload returned showing the simplified temporal evolution of temperature and humidity properties:
+
+```json
+{
+    "id": "urn:ngsi-ld:BeeHive:01",
+    "type": "BeeHive",
+    "temperature": {
+        "type": "Property",
+        "observedBy": {
+            "type": "Relationship",
+            "object": "urn:ngsi-ld:Sensor:01"
+        },
+        "unitCode": "CEL",
+        "values": [
+            [
+                42.0,
+                "2019-10-26T22:35:52.986010Z"
+            ],
+            [
+                22.2,
+                "2019-10-26T21:32:52.986010Z"
+            ],
+            [
+                100.0,
+                "2020-05-10T10:20:30.98601Z"
+            ]
+        ]
+    },
+    "@context": [
+        "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+    ]
+}
+```
+
+### Subscription
+
 * Let's create a subscription on the Beehive entity. We would like to be notified when the temperature of the BeeHive exceeds 40. To do so, we need a working `endpoint` in order to receive the notification related to the subscription. For this example, we are using Post Server V2 [http://ptsv2.com/](http://ptsv2.com/). This is a free public service. It is used only for tests and debugs. You need to configure your appropriate working `endpoint` for your private data.
 
 ```shell
-http POST http://localhost:8080/ngsi-ld/v1/subscriptions Content-Type:application/ld+json < subscription_to_beehive.jsonld
-```
-
-subscription_to_beehive.jsonld
-```json
+http POST http://localhost:8080/ngsi-ld/v1/subscriptions Content-Type:application/ld+json <<<'
 {
   "id":"urn:ngsi-ld:Subscription:01",
   "type":"Subscription",
@@ -414,6 +602,7 @@ subscription_to_beehive.jsonld
      "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
   ]
 }
+'
 ```
 
 * The created subscription can be retrieved by id:
@@ -422,30 +611,7 @@ subscription_to_beehive.jsonld
 http http://localhost:8080/ngsi-ld/v1/subscriptions/urn:ngsi-ld:Subscription:01 Link:$CONTEXT_LINK
 ```
 
-* We can update the temperature with a value grater then 40, using the following query:
-
-```shell
-http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
-    Link:$CONTEXT_LINK < beehive_updateTemperature.json
-```
-
-beehive_updateTemperature.json
-```json
-{
-   "temperature": {
-     "type": "Property",
-     "value": 42,
-     "unitCode": "CEL",
-     "observedAt": "2019-10-26T22:35:52.98601Z",
-     "observedBy": {
-        "type": "Relationship",
-        "object": "urn:ngsi-ld:Sensor:01"
-     }
-   }
-}
-```
-
- The previous update query will trigger sending notification to the configured endpoint. The body of the notification query sent to the endpoint URI is:
+Running The previous partial update [query](#partial-attributes-updates) (after the creation of the subscription), will trigger sending notification to the configured endpoint. The body of the notification query sent to the endpoint URI is:
 
 ```json
 {
@@ -474,147 +640,5 @@ beehive_updateTemperature.json
             ]
         }
     ]
-}
-```
-
-* We can also update the beehive humidity:
-
-```shell
-http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
-    Link:$CONTEXT_LINK < beehive_updateHumidity.json
-```
-
-beehive_updateHumidity.json
-```json
-{
-   "humidity": {
-     "type": "Property",
-     "value": 58,
-     "unitCode": "P1",
-     "observedAt": "2019-10-26T21:35:52.98601Z",
-     "observedBy": {
-        "type": "Relationship",
-        "object": "urn:ngsi-ld:Sensor:02"
-     }
-  }
-}
-```
-
-* Since we updated both temperature and humidity, we can get the temporal evolution of those properties
-
-```shell
-http http://localhost:8080/ngsi-ld/v1/temporal/entities/urn:ngsi-ld:BeeHive:01 \
-    timerel==between \
-    time==2019-10-25T12:00:00Z \
-    endTime==2021-10-27T12:00:00Z \
-    Link:$CONTEXT_LINK
-```
-
-Sample payload returned showing the temporal evolution of temperature and humidity properties:
-
-```json
-{
-    "@context": [
-        "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
-    ],
-    "humidity": [
-        {
-            "instanceId": "urn:ngsi-ld:Instance:a768ffb8-79e0-488f-9a4c-e7217ba2dff4",
-            "observedAt": "2019-10-26T21:35:52.986010Z",
-            "type": "Property",
-            "value": 58.0
-        },
-        {
-            "instanceId": "urn:ngsi-ld:Instance:28e44b9e-86f5-4bbb-a363-718d849d1782",
-            "observedAt": "2019-10-26T21:32:52.986010Z",
-            "type": "Property",
-            "value": 60.0
-        }
-    ],
-    "id": "urn:ngsi-ld:BeeHive:01",
-    "temperature": [
-        {
-            "instanceId": "urn:ngsi-ld:Instance:33642ff7-9b66-42c4-bcdf-9ca640cba782",
-            "observedAt": "2019-10-26T22:35:52.986010Z",
-            "type": "Property",
-            "value": 42.0
-        },
-        {
-            "instanceId": "urn:ngsi-ld:Instance:73226f04-1c47-49a6-ab88-976cb7493bea",
-            "observedAt": "2019-10-26T21:32:52.986010Z",
-            "type": "Property",
-            "value": 22.2
-        }
-    ],
-    "type": "BeeHive"
-}
-```
-
-* Let's update again the temperature property of the beehive:
-
-```shell
-http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
-    Link:$CONTEXT_LINK < beehive_secondTemperatureUpdate.json
-```
-beehive_secondTemperatureUpdate.json
-
-```json
-{
-   "temperature": {
-     "type": "Property",
-     "value": 100,
-     "unitCode": "CEL",
-     "observedAt": "2020-05-10T10:20:30.98601Z",
-     "observedBy": {
-        "type": "Relationship",
-        "object": "urn:ngsi-ld:Sensor:01"
-     }
-   }
-}
-```
-
-* We can get the simplified temporal representation of the temperature property of the beehive:
-
-```shell
-http http://localhost:8080/ngsi-ld/v1/temporal/entities/urn:ngsi-ld:BeeHive:01?options=temporalValues \
-    attrs==temperature \ 
-    timerel==between \
-    time==2019-10-25T12:00:00Z \
-    endTime==2020-10-27T12:00:00Z \
-    Link:$CONTEXT_LINK
-```
-
-The sample payload returned showing the simplified temporal evolution of temperature and humidity properties:
-
-```json
-{
-    "@context": [
-        "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
-    ],
-    "temperature": {
-        "createdAt": "2020-06-15T11:37:25.803985Z",
-        "observedBy": {
-            "createdAt": "2020-06-15T11:37:25.830823Z",
-            "object": "urn:ngsi-ld:Sensor:01",
-            "type": "Relationship"
-        },
-        "type": "Property",
-        "unitCode": "CEL",
-        "values": [
-            [
-                42.0,
-                "2019-10-26T22:35:52.986010Z"
-            ],
-            [
-                22.2,
-                "2019-10-26T21:32:52.986010Z"
-            ],
-            [
-                100.0,
-                "2020-05-10T10:20:30.98601Z"
-            ]
-        ]
-    },
-    "type": "BeeHive"
 }
 ```
