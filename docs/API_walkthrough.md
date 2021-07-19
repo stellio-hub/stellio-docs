@@ -334,7 +334,7 @@ http http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01 Link:$CONT
 http http://localhost:8080/ngsi-ld/v1/entities type==BeeHive Link:$CONTEXT_LINK
 ```
 
-* Adding the options `KeyValues` to the parameter of a get query will return a reduced version of the Entity providing only top level attribute and their value or object.
+* Adding the options `keyValues` to the request parameters will return a reduced version of the entity providing only top level attribute and their value or object.
 
 ```shell
 http http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01  options==keyValues Link:$CONTEXT_LINK
