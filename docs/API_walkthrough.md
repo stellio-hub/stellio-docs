@@ -420,19 +420,11 @@ http DELETE http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/att
 * We can update the temperature with a value grater then 40, using the following query:
 
 ```shell
-http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs \
+http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs/temperature \
     Link:$CONTEXT_LINK <<<'
 {
-   "temperature": {
-     "type": "Property",
      "value": 42,
-     "unitCode": "CEL",
-     "observedAt": "2019-10-26T22:35:52.98601Z",
-     "observedBy": {
-        "type": "Relationship",
-        "object": "urn:ngsi-ld:Sensor:01"
-     }
-   }
+     "observedAt": "2019-10-26T22:35:52.98601Z"
 }
 '
 ```
