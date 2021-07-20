@@ -417,7 +417,7 @@ http DELETE http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/att
 
 ### Partial Attributes Updates
 
-* We can update the temperature with a value grater then 40, using the following query:
+* We can update the temperature with a value greater than 40, using the following query:
 
 ```shell
 http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attrs/temperature \
