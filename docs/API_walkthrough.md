@@ -43,7 +43,7 @@ We will create the following entities:
 
 - Sensor humidity
 
-- Beehive.jsonld
+- Beehive
 
 
 ## Queries
