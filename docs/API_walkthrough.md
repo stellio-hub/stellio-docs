@@ -302,7 +302,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entityOperations/create Content-Type:
 '
 ```
 
-### Discovering Entities
+### Discover Entities
 
 * All available types of entities can be retrieved:
 ```shell
