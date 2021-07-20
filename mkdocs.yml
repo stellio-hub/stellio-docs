@@ -1,6 +1,6 @@
 site_name: Stellio Context Broker
 site_url: https://stellio.readthedocs.org
-repo_url: https://github.com/stellio-hub/stellio-context-broker
+repo_url: https://github.com/stellio-hub/stellio-docs
 site_description: Stellio Context Broker Documentation
 docs_dir: docs
 site_dir: html
@@ -13,6 +13,7 @@ extra_css: ["https://www.fiware.org/style/fiware_readthedocs.css", "https://www.
 nav:
   - Home: index.md
   - Getting Started: 'quick_start_guide.md'
+  - API Walkthrough: 'API_walkthrough.md'
   - User & Programmers Manual:
       - Authentication and authorization: 'user/authentication_and_authorization.md'
       - Visualizing the graph: 'user/visualizing_graph.md'
