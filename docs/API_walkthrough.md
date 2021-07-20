@@ -324,10 +324,10 @@ Sample payload returned showing the current available entity types:
 }
 ```
 
-* To get more details about a type of entity, a Beekeeper for example:
+* To get more details about a type of an entity, a Beekeeper for example:
 
 ```shell
-http http://localhost:8080/ngsi-ld/v1/entities type==Beekeeper Link:$CONTEXT_LINK
+http http://localhost:8080/ngsi-ld/v1/types/Beekeeper Link:$CONTEXT_LINK
 ```
 
 Sample payload returned showing more details about the entity Beekeeper:
