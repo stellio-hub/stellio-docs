@@ -19,7 +19,7 @@ export CONTEXT_LINK="<https://raw.githubusercontent.com/easy-global-market/ngsil
 ## Starting the Stellio Context Broker
 The Stellio Context Broker source code can be found here : https://github.com/stellio-hub/stellio-context-broker
 
-To Start a Stellio instance. You can clone the stellio-context-broker and use the provided Docker compose configuration to run containers:
+To Start a Stellio instance. You can clone the Stellio repository and use the provided Docker compose configuration to run containers:
 
 ```shell
 git clone https://github.com/stellio-hub/stellio-context-broker
