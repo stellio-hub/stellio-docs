@@ -549,11 +549,6 @@ The sample payload returned showing the simplified temporal evolution of tempera
     "type": "BeeHive",
     "temperature": {
         "type": "Property",
-        "observedBy": {
-            "type": "Relationship",
-            "object": "urn:ngsi-ld:Sensor:01"
-        },
-        "unitCode": "CEL",
         "values": [
             [
                 42.0,
