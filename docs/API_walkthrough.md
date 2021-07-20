@@ -41,7 +41,7 @@ We will create the following entities:
 
 - Sensor temperature
 
-- Sensor_humidity.jsonld
+- Sensor humidity
 
 - Beehive.jsonld
 
