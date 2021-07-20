@@ -39,7 +39,7 @@ We will create the following entities:
 
 - Apiary
 
-- Sensor_temperature.jsonld
+- Sensor temperature
 
 - Sensor_humidity.jsonld
 
