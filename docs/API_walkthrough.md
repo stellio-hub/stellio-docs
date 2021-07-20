@@ -529,7 +529,7 @@ http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attr
 '
 ```
 
-* We can get the simplified temporal representation of the temperature property of the beehive by adding the field `option` with the value `temporalValues` with the paramters of the query:
+* We can get the simplified temporal representation of the temperature property of the beehive by adding the request parameter `option` with the value `temporalValues` in the query:
 
 ```shell
 http http://localhost:8080/ngsi-ld/v1/temporal/entities/urn:ngsi-ld:BeeHive:01?options=temporalValues \
