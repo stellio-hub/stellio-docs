@@ -124,5 +124,3 @@ References:
 ## API breaking changes
 
 ### Rename `page` to `offset` in pagination queries
-
-### Migrate to NGSI-LD core @context v1.3
