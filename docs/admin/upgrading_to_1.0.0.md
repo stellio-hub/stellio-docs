@@ -8,7 +8,13 @@ This note describes the necessary steps to upgrade to Stellio 1.0.0
 
 ```
 export POSTGRES_PASSWORD=postgres_user_password
-export POSTGRES_CONTAINER_NAME=stellio-postgres
+export POSTGRES_CONTAINER_NAME=postgres_container_name (see container_name attribute in service declaration in docker-compose.yml file)
+```
+
+* Stop the services using the PostgreSQL databases (to avoid loss of data during the upgrade)
+
+```
+docker-compose stop search-service subscription-service
 ```
 
 * Backup the search and subscription databases
@@ -27,7 +33,7 @@ export PG_VOLUME_NAME=$(docker inspect $POSTGRES_CONTAINER_NAME --format='{{rang
 * Stop the current running instance
 
 ```
-docker-compose stop postgres
+docker-compose stop $POSTGRES_CONTAINER_NAME
 docker container rm $POSTGRES_CONTAINER_NAME
 ```
 
@@ -74,11 +80,13 @@ docker volume rm $PG_VOLUME_NAME
 docker volume create $PG_VOLUME_NAME
 ```
 
-Edit `docker-compose.yml` file, change the Timescale image name to `stellio/stellio-timescale-postgis:2.3.0-pg13` and create the new container by running:
+* Edit `docker-compose.yml` file, change the Timescale image name to `stellio/stellio-timescale-postgis:2.3.0-pg13` and create the new container by running:
 
 ```
 docker-compose up -d
 ```
+
+Before, be sure to comment out search and subscription services (to avoid that they restart before the end of the migration) and to source any specific environment file).
 
 * Restore the backups made after the update of the Timescale extension
 
@@ -113,6 +121,12 @@ SELECT timescaledb_post_restore();
 ```
 
 Exit the container and eventually remove the dumps.
+
+* Edit `docker-compose.yml` file, un-comment search and subscription services and restart the services:
+
+```
+docker-compose up -d
+```
 
 References:
 
