@@ -40,8 +40,8 @@ docker container rm $POSTGRES_CONTAINER_NAME
 * Get and run the Timescale 2.3.0-pg11 image
 
 ```
-docker pull timescale/timescaledb:2.3.0-pg11
-docker run -v $PG_VOLUME_NAME:/var/lib/postgresql/data -e PGDATA=/var/lib/postgresql/data/pgdata -d --name timescaledb-2.3.0 -p 5432:5432 timescale/timescaledb:2.3.0-pg11
+docker pull timescale/timescaledb-postgis:2.3.0-pg11
+docker run -v $PG_VOLUME_NAME:/var/lib/postgresql/data -e PGDATA=/var/lib/postgresql/data/pgdata -d --name timescaledb-2.3.0 -p 5432:5432 timescale/timescaledb-postgis:2.3.0-pg11
 ```
 
 * Upgrade Timescale extension in the two databases
