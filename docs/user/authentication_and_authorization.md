@@ -2,7 +2,7 @@
 
 ## Specific access policy
 
-Stellio supports providing a specific property, called `specificAccessPolicy` (defined in [EGM's cross-context]("https://github.com/easy-global-market/ngsild-api-data-models/blob/master/shared-jsonld-contexts/egm.jsonld#L34")), to allow any authenticated user to read or update the entity.
+Stellio supports providing a specific property, called `specificAccessPolicy` (defined in [EGM's cross-context](https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld)), to allow any authenticated user to read or update the entity.
 
 This property can be set at entity creation time and it can later be updated by any user who has admin rights on the entity. In case an unauthorized user tries to modify it, a 403 HTTP error is returned.
 
