@@ -17,6 +17,7 @@ nav:
       - Authentication and authorization: 'user/authentication_and_authorization.md'
       - Visualizing the graph: 'user/visualizing_graph.md'
       - Data model: 'user/data_model.md'
+      - Internal event model: 'user/internal_event_model.md'
   - Installation & Administration Manual:
       - Production deployment: 'admin/production_deployment.md'
       - Monitoring and logging: 'admin/monitoring_and_logging.md'
