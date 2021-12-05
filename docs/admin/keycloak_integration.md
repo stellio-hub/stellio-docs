@@ -2,6 +2,8 @@
 
 Stellio can be used with the [Keycloak](https://www.keycloak.org) IAM solution.
 
+## Connect Keycloak with Stellio
+
 Installation and configuration of Keycloak is not described here, as it is well documented on the Keycloak site.
 
 In order to connect Stellio with Keycloak, the following steps have to be performed:
@@ -12,18 +14,18 @@ In order to connect Stellio with Keycloak, the following steps have to be perfor
 - Configure Keycloak to propagate user, group and client events to Stellio
 - Activate and configure authentication in Stellio
 
-## Use the Keycloak Docker image by EGM
+### Use the Keycloak Docker image by EGM
 
 This Docker image extends the Keycloak Docker image to bundle into it two SPIs:
 
 - The Stellio event listener that propagates provisioning events to the Kafka message broker used by Stellio
 - A metrics listener that exposes an endpoint that can be consumed by Prometheus
 
-## Create a realm
+### Create a realm
 
 Follow instructions on how to [create a new realm in Keycloak](https://www.keycloak.org/docs/latest/server_admin/index.html#_create-realm)
 
-## Create the builtin roles
+### Create the builtin roles
 
 Stellio natively interprets two specific Realm roles that must first be created in Keycloak (see [procedure to create a role](https://www.keycloak.org/docs/latest/server_admin/index.html#realm-roles):
 
@@ -32,7 +34,7 @@ Stellio natively interprets two specific Realm roles that must first be created 
 
 ![](images/keycloak_roles_configuration.png)
 
-## Configure Keycloak event listener
+### Configure Keycloak event listener
 
 In the Keycloak Docker configuration, add the Kafka environment variables:
 
@@ -62,7 +64,7 @@ Then, in the Keycloak admin console:
 
 ![](images/keycloak_events_configuration.png)
 
-## Configure authentication in Stellio
+### Configure authentication in Stellio
 
 Finally, on Stellio side, configure the Keycloak URLs in entity, search and subscription services.
 
@@ -79,3 +81,129 @@ Values should look like:
 
 - https://sso.yourcompany.com/auth/realms/{realm_name}
 - https://sso.yourcompany.com/auth/realms/{realm_name}/protocol/openid-connect/certs
+
+## Events raised by Keycloak
+
+While creating and configuring users, groups and clients in Keycloak, the following events are raised by Keycloak and sent to the Kafka message broker operated by Stellio:
+
+- Create an user
+
+```json
+{
+  "operationType":"ENTITY_CREATE",
+  "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+  "entityType":"User",
+  "operationPayload":"{\"id\":\"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\",\"type\":\"User\",\"username\":{\"type\":\"Property\",\"value\":\"user@mail.com\"},\"roles\":{\"type\":\"Property\",\"value\":\"stellio-creator\"}}",
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+}
+```
+
+- Create a group
+
+```json
+{
+  "operationType":"ENTITY_CREATE",
+  "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
+  "entityType":"Group",
+  "operationPayload":"{\"id\":\"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\",\"type\":\"Group\",\"name\":{\"type\":\"Property\",\"value\":\"Group name\"}}",
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+}
+```
+
+- Create a client
+
+```json
+{
+  "operationType":"ENTITY_CREATE",
+  "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
+  "entityType":"Client",
+  "operationPayload":"{\"id\":\"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj\",\"type\":\"Client\",\"clientId\":{\"type\":\"Property\",\"value\":\"client-id\"}}",
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+}
+```
+
+- Set the service account id of a client
+
+It is the identifier that is transmitted when a client does a direct request on the context broker (i.e., not on behalf of an user). It is automatically transmitted when realm roles are given to a client.
+
+```json
+{
+  "operationType":"ATTRIBUTE_APPEND",
+  "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
+  "entityType":"Client",
+  "attributeName":"serviceAccountId",
+  "operationPayload":"{\"type\":\"Property\",\"value\":\"urn:ngsi-ld:User:jjjjjjjj-iiii-hhhh-gggg-ffffffffffff\"}",
+  "updatedEntity":"",
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+}
+```
+
+- Update realm roles of an user / group / client
+
+An array of realm roles is sent, it is empty if the subject has no longer a realm role.
+
+```json
+{
+  "operationType":"ATTRIBUTE_APPEND",
+  "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
+  "entityType":"Client",
+  "attributeName":"roles",
+  "operationPayload":"{\"type\":\"Property\",\"value\":[\"stellio-creator\"]}",
+  "updatedEntity":"",
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+}
+```
+
+- Add an user to a group
+
+```json
+{
+  "operationType":"ATTRIBUTE_APPEND",
+  "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+  "entityType":"User",
+  "attributeName":"isMemberOf",
+  "datasetId":"urn:ngsi-ld:Dataset:isMemberOf:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
+  "operationPayload":"{\"type\":\"Relationship\",\"object\":\"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\",\"datasetId\":\"urn:ngsi-ld:Dataset:isMemberOf:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\"}",
+  "updatedEntity":"",
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+}
+```
+
+- Remove an user from a group
+
+```json
+{
+  "operationType":"ATTRIBUTE_DELETE",
+  "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+  "entityType":"User",
+  "attributeName":"isMemberOf",
+  "datasetId":"urn:ngsi-ld:Dataset:isMemberOf:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
+  "updatedEntity":"",
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+}
+```
+
+- Update the name of a group
+
+```json
+{
+  "operationType":"ATTRIBUTE_REPLACE",
+  "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
+  "entityType":"Group",
+  "attributeName":"name",
+  "operationPayload":"{\"type\":\"Property\",\"value\":\"New group name\"}",
+  "updatedEntity":"",
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+}
+```
+
+- Delete a user / group / client
+
+```json
+{
+  "operationType":"ENTITY_DELETE",
+  "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
+  "entityType":"Group",
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+}
+```
