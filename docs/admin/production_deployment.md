@@ -18,7 +18,7 @@ To activate it, add the following configuration in the environment section of th
       - MANAGEMENT_ENDPOINT_INFO_ENABLED=true
 ```
 
-The response received looks like:
+You call then call the `api-gateway` service at the following path: `/actuator/info` (for instance, `http://localhost:8080/actuator/info` for a local development deployment). The response received looks like:
 
 ```
 {
