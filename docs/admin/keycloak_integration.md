@@ -16,10 +16,48 @@ In order to connect Stellio with Keycloak, the following steps have to be perfor
 
 ### Use the Keycloak Docker image by EGM
 
-This Docker image extends the Keycloak Docker image to bundle into it two SPIs:
+The provoded Docker image extends the official Keycloak Docker image to bundle it with two SPIs:
 
 - The Stellio event listener that propagates provisioning events to the Kafka message broker used by Stellio
 - A metrics listener that exposes an endpoint that can be consumed by Prometheus
+
+To start with, you can use this sample Docker compose file (do not forget to create a `.env` file with the needed environment variables):
+
+```yaml
+version: '3.5'
+services:
+  keycloak:
+    container_name: keycloak
+    image: easyglobalmarket/keycloak
+    restart: always
+    environment:
+      - KEYCLOAK_USER=${KEYCLOAK_USER}
+      - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}
+      - PROXY_ADDRESS_FORWARDING=true
+      - DB_VENDOR=postgres
+      - DB_ADDR=postgres
+      - DB_DATABASE=${KEYCLOAK_DB_DATABASE}
+      - DB_USER=${KEYCLOAK_DB_USER}
+      - DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+    ports:
+      - 9990:8080
+    depends_on:
+      - postgres
+  postgres:
+    container_name: postgres
+    image: postgres:12-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${KEYCLOAK_DB_DATABASE}
+      POSTGRES_USER: ${KEYCLOAK_DB_USER}
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+
+volumes:
+  postgres_data:
+      driver: local
+```
 
 ### Create a realm
 
@@ -66,7 +104,7 @@ Then, in the Keycloak admin console:
 
 ### Configure authentication in Stellio
 
-Finally, on Stellio side, configure the Keycloak URLs in entity, search and subscription services.
+Finally, on Stellio side, configure the Keycloak URLs in entity, search and subscription services in Docker compose config.
 
 For instance:
 
