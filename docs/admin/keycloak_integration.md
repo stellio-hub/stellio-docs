@@ -39,6 +39,15 @@ services:
       - DB_DATABASE=${KEYCLOAK_DB_DATABASE}
       - DB_USER=${KEYCLOAK_DB_USER}
       - DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+      - KAFKA_BOOTSTRAP_SERVERS={realm_name}/{kafka_ip}:{kafka_port}
+      - KAFKA_KEY_SERIALIZER_CLASS=org.apache.kafka.common.serialization.StringSerializer
+      - KAFKA_VALUE_SERIALIZER_CLASS=org.apache.kafka.common.serialization.StringSerializer
+      - KAFKA_ACKS=all
+      - KAFKA_DELIVERY_TIMEOUT_MS=3000
+      - KAFKA_REQUEST_TIMEOUT_MS=2000
+      - KAFKA_LINGER_MS=1
+      - KAFKA_BATCH_SIZE=16384
+      - KAFKA_BUFFER_MEMORY=33554432
     ports:
       - 9990:8080
     depends_on:
@@ -59,6 +68,13 @@ volumes:
       driver: local
 ```
 
+where:
+
+- `realm_name` is the name of the realm to be created in the next section
+- `kafka_ip` and `kafka_port` is the address where the Stellio's Kafka instance is running
+
+Please note that for a more secure deployment, it is recommended to setup a certficate based authentication between Keycloak and Kafka.
+
 ### Create a realm
 
 Follow instructions on how to [create a new realm in Keycloak](https://www.keycloak.org/docs/latest/server_admin/index.html#_create-realm)
@@ -74,27 +90,7 @@ Stellio natively interprets two specific Realm roles that must first be created 
 
 ### Configure Keycloak event listener
 
-In the Keycloak Docker configuration, add the Kafka environment variables:
-
-```yaml
-  keycloak:
-    container_name: keycloak
-    image: easyglobalmarket/keycloak
-    environment:
-      - KAFKA_BOOTSTRAP_SERVERS={realm_name}/{kafka_ip}:{kafka_port}
-      - KAFKA_KEY_SERIALIZER_CLASS=org.apache.kafka.common.serialization.StringSerializer
-      - KAFKA_VALUE_SERIALIZER_CLASS=org.apache.kafka.common.serialization.StringSerializer
-      - KAFKA_ACKS=all
-      - KAFKA_DELIVERY_TIMEOUT_MS=3000
-      - KAFKA_REQUEST_TIMEOUT_MS=2000
-      - KAFKA_LINGER_MS=1
-      - KAFKA_BATCH_SIZE=16384
-      - KAFKA_BUFFER_MEMORY=33554432
-```
-
-Please note that for a more secure deployment, it is recommended to setup a certficate based authentication between Keycloak and Kafka.
-
-Then, in the Keycloak admin console:
+In the Keycloak admin console:
 
 - Select the realm that will be used by Stellio
 - Go to the Events section
