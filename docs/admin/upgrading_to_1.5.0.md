@@ -1,0 +1,31 @@
+# Upgrading to 1.5.0
+
+This note describes the necessary steps to upgrade to Stellio 1.5.0
+
+## Synchronization of access rights
+
+In order to propagate access rights defined in entity service, an action has to be launched manually by an account having the `stellio-admin` role.
+
+Before doing this, it is recommended, but not necessary, to launch manually some Cypher scripts to clean up potentially invalid data:
+
+* Ensure all dates on relationships nodes are in the correct format:
+
+```
+docker exec -it neo4j cypher-shell -u neo4j -p {neo4j_user_password} -d stellio "MATCH (r:Relationship) SET r.createdAt = datetime(r.createdAt) SET r.modifiedAt = datetime(r.modifiedAt);"
+```
+
+* Ensure there are no duplicate entities in the graph
+
+```
+docker exec -it neo4j cypher-shell -u neo4j -p {neo4j_user_password} -d stellio "MATCH (e:Entity) WITH e.id AS id, COLLECT(e) AS nodelist, COUNT(*) AS count WHERE count > 1 CALL apoc.refactor.mergeNodes(nodelist) YIELD node RETURN node;"
+```
+
+* Launch the synchronization action (to be done with an account having the `stellio-admin` role)
+
+```
+# Get an acces token first
+export TOKEN=$(http --form POST https://sso.eglobalmark.com/auth/realms/{realm_name}/protocol/openid-connect/token client_id={client_id} client_secret={client_secret} grant_type=client_credentials | jq -r .access_token)
+
+# Call the synchronization action
+http POST https://{your_context_broker_domain_name}/entity/admin/iam/sync Authorization:"Bearer $TOKEN"
+```
