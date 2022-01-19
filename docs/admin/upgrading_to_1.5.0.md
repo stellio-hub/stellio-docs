@@ -29,3 +29,5 @@ export TOKEN=$(http --form POST https://sso.eglobalmark.com/auth/realms/{realm_n
 # Call the synchronization action
 http POST https://{your_context_broker_domain_name}/entity/admin/iam/sync Authorization:"Bearer $TOKEN"
 ```
+
+Check the logs of the entity and search services to be sure the synchronization has worked as expected. If not, feel free [to raise an issue](https://github.com/stellio-hub/stellio-context-broker/issues/new/choose) in the Stellio repository.
