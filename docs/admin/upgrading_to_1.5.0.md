@@ -2,6 +2,17 @@
 
 This note describes the necessary steps to upgrade to Stellio 1.5.0
 
+## Upgrade Docker Compose
+
+Stellio now uses the Compose specification version 3.9. To be able to run the Docker Compose file provided with Stellio, you need to have Docker Compose 1.29+, be sure to upgrade to this version before launching Stellio 1.5.0.
+
+On Debian / Ubuntu systems, you can install it with the following instructions:
+
+```
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
 ## Synchronization of access rights
 
 In order to propagate access rights defined in entity service, an action has to be launched manually by an account having the `stellio-admin` role.
