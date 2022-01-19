@@ -31,6 +31,12 @@ docker exec -it neo4j cypher-shell -u neo4j -p {neo4j_user_password} -d stellio 
 docker exec -it neo4j cypher-shell -u neo4j -p {neo4j_user_password} -d stellio "MATCH (e:Entity) WITH e.id AS id, COLLECT(e) AS nodelist, COUNT(*) AS count WHERE count > 1 CALL apoc.refactor.mergeNodes(nodelist) YIELD node RETURN node;"
 ```
 
+* Ensure all relationships have the `objectId` property correctly filled:
+
+```
+docker exec -it neo4j cypher-shell -u neo4j -p {neo4j_user_password} -d stellio "MATCH (r:Attribute:Relationship)-[]->(e:Entity) SET r.objectId = e.id;"
+```
+
 * Launch the synchronization action (to be done with an account having the `stellio-admin` role)
 
 ```
@@ -38,7 +44,7 @@ docker exec -it neo4j cypher-shell -u neo4j -p {neo4j_user_password} -d stellio 
 export TOKEN=$(http --form POST https://sso.eglobalmark.com/auth/realms/{realm_name}/protocol/openid-connect/token client_id={client_id} client_secret={client_secret} grant_type=client_credentials | jq -r .access_token)
 
 # Call the synchronization action
-http POST https://{your_context_broker_domain_name}/entity/admin/iam/sync Authorization:"Bearer $TOKEN"
+http POST https://{your_context_broker_domain_name}/ngsi-ld/v1/entityAccessControl/sync Authorization:"Bearer $TOKEN"
 ```
 
 Check the logs of the entity and search services to be sure the synchronization has worked as expected. If not, feel free [to raise an issue](https://github.com/stellio-hub/stellio-context-broker/issues/new/choose) in the Stellio repository.
