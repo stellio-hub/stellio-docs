@@ -15,29 +15,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 ## Synchronization of access rights
 
-In order to propagate access rights defined in entity service, an action has to be launched manually by an account having the `stellio-admin` role.
-
-Before doing this, it is recommended, but not necessary, to launch manually some Cypher scripts to clean up potentially invalid data:
-
-* Ensure all dates on relationships nodes are in the correct format:
-
-```
-docker exec -it neo4j cypher-shell -u neo4j -p {neo4j_user_password} -d stellio "MATCH (r:Relationship) SET r.createdAt = datetime(r.createdAt) SET r.modifiedAt = datetime(r.modifiedAt);"
-```
-
-* Ensure there are no duplicate entities in the graph
-
-```
-docker exec -it neo4j cypher-shell -u neo4j -p {neo4j_user_password} -d stellio "MATCH (e:Entity) WITH e.id AS id, COLLECT(e) AS nodelist, COUNT(*) AS count WHERE count > 1 CALL apoc.refactor.mergeNodes(nodelist) YIELD node RETURN node;"
-```
-
-* Ensure all relationships have the `objectId` property correctly filled:
-
-```
-docker exec -it neo4j cypher-shell -u neo4j -p {neo4j_user_password} -d stellio "MATCH (r:Attribute:Relationship)-[]->(e:Entity) SET r.objectId = e.id;"
-```
-
-* Launch the synchronization action (to be done with an account having the `stellio-admin` role)
+In order to propagate access rights defined in entity service, an action has to be launched manually by an account having the `stellio-admin` role:
 
 ```
 # Get an acces token first
