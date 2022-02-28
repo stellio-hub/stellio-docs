@@ -21,6 +21,7 @@ nav:
   - Installation & Administration Manual:
       - Production deployment: 'admin/production_deployment.md'
       - Monitoring and logging: 'admin/monitoring_and_logging.md'
+      - Backup and restore: 'admin/backup_and_restore.md'
       - Keycloak integration: 'admin/keycloak_integration.md'
       - Upgrading:
         - General notes: 'admin/upgrading_general_notes.md'
