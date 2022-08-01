@@ -2,23 +2,23 @@
 
 This note describes changes made by upgrade to Stellio 1.9.0
 
-## New endpoint for rights management.
+## New endpoints for rights management
 
-Stellio 1.9.0 brings new endpoints to visualize the rights that we have on entities but also to know the groups which we belongs to.
+Stellio 1.9.0 brings new endpoints to visualize the rights an user has on entities but also to know the groups which he belongs to.
 
 ### Get authorized entites for the currently authenticated user 
 
-The first endpoint allows you to retrieve the rights for all the entities of the authenticated person.
+The first endpoint allows to retrieve the rights for all the entities of the authenticated person.
 
-To do this, you must do a GET on `/ngsi-ld/v1/entityAccessControl/entities`.
+To do this, the query should be a `GET` with as endpoint `/ngsi-ld/v1/entityAccessControl/entities`.
 
 The following request parameters are supported: 
 
-    -  q: to restrict returned entities to the ones with a specific right. Only "rCanRead" and "rCanWrite" and "rCanAdmin" are accepted. A list is accepted (e.g, “q=rCanRead;rCanWrite”). This request parameter does not work when user are stellio admin. 
+    -  `q`: to restrict returned entities to the ones with a specific right. Only `rCanRead` and `rCanWrite` and `rCanAdmin` are accepted. A list is accepted (e.g, `q=rCanRead;rCanWrite`). This request parameter does not work when user is stellio admin. 
 
-    -  type: to restrict returned entities to a given entity type 
+    -  `type`: to restrict returned entities to a given entity type 
 
-    - options: with the sysAttrs value to get the system attributes.
+    - `options`: use `sysAttrs` value to get the system attributes.
 
 Then there are several possible answers:
 
@@ -78,14 +78,14 @@ The body contains id, type, datasetId, right and specificAccessPolicy.
     ```
     The body also contains the users who have right on it.  
 
-    3) If user use stellio without authentification the response sent the status 204 no content. 
+    3) If user use Stellio without authentification, a 204 (No content) response is returned. 
 
 
 ### Get groups the currently authenticated user belongs to 
 
-This endpoint allows you to retrieve the groups which we belongs to.
+This endpoint allows to retrieve the groups which we belongs to.
 
-To do this, you must do a GET on `/ngsi-ld/v1/entityAccessControl/groups`.
+To do this, the query should be a `GET` with as endpoint `/ngsi-ld/v1/entityAccessControl/groups`.
 
 Then there are several possible answers:
 
@@ -104,7 +104,7 @@ Then there are several possible answers:
     ```
     The body contains id, type and name of the group. 
 
-    2) If user is not admin, all groups are returned:
+    2) If user is admin, all groups are returned:
 
     ```
     { 
@@ -121,6 +121,6 @@ Then there are several possible answers:
         @context: […] 
     }
     ```
-    The body contains id, type, name of the group and if user are member of this group. 
+    The body contains id, type, name of the group and if user is member of this group. 
 
-    3) If user use stellio without authentification the response sent the status 204 no content. 
+    3) If user use Stellio without authentification, a 204 (No content) response code is returned. 
