@@ -16,7 +16,7 @@ In order to connect Stellio with Keycloak, the following steps have to be perfor
 
 ### Use the Keycloak Docker image by EGM
 
-The provoded Docker image extends the official Keycloak Docker image to bundle it with two SPIs:
+The provided Docker image extends the official Keycloak Docker image to bundle it with two SPIs:
 
 - The Stellio event listener that propagates provisioning events to the Kafka message broker used by Stellio
 - A metrics listener that exposes an endpoint that can be consumed by Prometheus
@@ -126,9 +126,9 @@ While creating and configuring users, groups and clients in Keycloak, the follow
 {
   "operationType":"ENTITY_CREATE",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-  "entityType":"User",
+  "entityTypes":["User"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\",\"type\":\"User\",\"username\":{\"type\":\"Property\",\"value\":\"user@mail.com\"},\"roles\":{\"type\":\"Property\",\"value\":\"stellio-creator\"}}",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
 }
 ```
 
@@ -138,9 +138,9 @@ While creating and configuring users, groups and clients in Keycloak, the follow
 {
   "operationType":"ENTITY_CREATE",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
-  "entityType":"Group",
+  "entityTypes":["Group"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\",\"type\":\"Group\",\"name\":{\"type\":\"Property\",\"value\":\"Group name\"}}",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
 }
 ```
 
@@ -150,9 +150,9 @@ While creating and configuring users, groups and clients in Keycloak, the follow
 {
   "operationType":"ENTITY_CREATE",
   "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
-  "entityType":"Client",
+  "entityTypes":["Client"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj\",\"type\":\"Client\",\"clientId\":{\"type\":\"Property\",\"value\":\"client-id\"}}",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
 }
 ```
 
@@ -164,11 +164,11 @@ It is the identifier that is transmitted when a client does a direct request on 
 {
   "operationType":"ATTRIBUTE_APPEND",
   "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
-  "entityType":"Client",
+  "entityTypes":["Client"],
   "attributeName":"serviceAccountId",
   "operationPayload":"{\"type\":\"Property\",\"value\":\"urn:ngsi-ld:User:jjjjjjjj-iiii-hhhh-gggg-ffffffffffff\"}",
   "updatedEntity":"",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
 }
 ```
 
@@ -180,11 +180,11 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 {
   "operationType":"ATTRIBUTE_APPEND",
   "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
-  "entityType":"Client",
+  "entityTypes":["Client"],
   "attributeName":"roles",
   "operationPayload":"{\"type\":\"Property\",\"value\":[\"stellio-creator\"]}",
   "updatedEntity":"",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
 }
 ```
 
@@ -194,12 +194,12 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 {
   "operationType":"ATTRIBUTE_APPEND",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-  "entityType":"User",
+  "entityTypes":["User"],
   "attributeName":"isMemberOf",
   "datasetId":"urn:ngsi-ld:Dataset:isMemberOf:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "operationPayload":"{\"type\":\"Relationship\",\"object\":\"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\",\"datasetId\":\"urn:ngsi-ld:Dataset:isMemberOf:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\"}",
   "updatedEntity":"",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
 }
 ```
 
@@ -209,11 +209,11 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 {
   "operationType":"ATTRIBUTE_DELETE",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-  "entityType":"User",
+  "entityTypes":["User"],
   "attributeName":"isMemberOf",
   "datasetId":"urn:ngsi-ld:Dataset:isMemberOf:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "updatedEntity":"",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
 }
 ```
 
@@ -223,11 +223,11 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 {
   "operationType":"ATTRIBUTE_REPLACE",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
-  "entityType":"Group",
+  "entityTypes":["Group"],
   "attributeName":"name",
   "operationPayload":"{\"type\":\"Property\",\"value\":\"New group name\"}",
   "updatedEntity":"",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
 }
 ```
 
@@ -237,7 +237,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 {
   "operationType":"ENTITY_DELETE",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
-  "entityType":"Group",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+  "entityTypes":["Group"],
+  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
 }
 ```

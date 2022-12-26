@@ -1,16 +1,14 @@
 # Internal event model
 
-As explained in the [Getting Started page](../quick_start_guide.md), Stellio internally uses a Kafka message broker to decouple communication between the 3 main micro-services.
+As explained in the [Getting Started page](../quick_start_guide.md), Stellio internally uses a Kafka message broker to decouple communication between the 2 main micro-services.
 
 This communication is based on an event model inspired by the NGSI-LD API and does its best to follow the same design principles.
 
 Currently, the following events are flowing inside the platform:
 
 - Operations done on entities through the NGSI-LD API (including batch operations)
-    - Used by the search service to transparently track the temporal evolution of an entity
     - Used by the subscription service to trigger notification if there are some matching subscriptions
 - Subscriptions and notifications
-    - Subscriptions and the last notification of each subscription is kept by the entity service (so that they can be retrieved like any entity)
     - History of notifications raised for each subscription is stored by the search service
 - Identity and access management events sent by Keycloak
     - Listened by the micro-services to provision users, groups and clients, as well as their global roles and groups memberships
@@ -32,7 +30,7 @@ Here is the list of supported events, accompanied by a sample payload:
     "operationPayload": "{\"id\": \"urn:ngsi-ld:Vehicle:A4567\", \"type\": \"Vehicle\", \"brandName\": { \"type\": \"Property\", \"value\": \"Mercedes\"}}",
     "contexts": [
         "https://some.host/my-context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"
     ],
     "operationType": "ENTITY_CREATE"
 }
@@ -54,7 +52,7 @@ Same payload as when creating an entity, but with an `OPERATION_TYPE` set to `EN
     "entityType": "Vehicle",
     "contexts": [
         "https://some.host/my-context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"
     ],
     "operationType": "ENTITY_DELETE"
 }
@@ -73,7 +71,7 @@ Same payload as when creating an entity, but with an `OPERATION_TYPE` set to `EN
     "updatedEntity": "(entity payload after the append operation)",
     "contexts": [
         "https://some.host/my-context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"
     ],
     "operationType": "ATTRIBUTE_APPEND"
 }
@@ -95,7 +93,7 @@ Same payload as when appending an attribute, but with an `OPERATION_TYPE` set to
     "updatedEntity": "(entity payload after the update operation)",
     "contexts": [
         "https://some.host/my-context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"
     ],
     "operationType": "ATTRIBUTE_UPDATE"
 }
@@ -112,7 +110,7 @@ Same payload as when appending an attribute, but with an `OPERATION_TYPE` set to
     "updatedEntity": "(entity payload after the delete operation)",
     "contexts": [
         "https://some.host/my-context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"
     ],
     "operationType": "ATTRIBUTE_DELETE"
 }
@@ -128,7 +126,7 @@ Same payload as when appending an attribute, but with an `OPERATION_TYPE` set to
     "updatedEntity": "(entity payload after the delete operation)",
     "contexts": [
         "https://some.host/my-context.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"
     ],
     "operationType": "ATTRIBUTE_DELETE_ALL_INSTANCES"
 }
