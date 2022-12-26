@@ -1,8 +1,12 @@
 # Authentication and authorization
 
+## Pre-requisites
+
+For all the API operations described in this page, the [EGM's authorization context](https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld) has to be included in every operation.
+
 ## Specific access policy
 
-Stellio supports providing a specific property, called `specificAccessPolicy` (defined in [EGM's authorization context](https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld)), to allow any authenticated user to read or update an entity.
+Stellio supports providing a specific property, called `specificAccessPolicy`, to allow any authenticated user to read or update an entity.
 
 This property can be set at entity creation time and it can later be updated by any user who has admin rights on the entity. In case an unauthorized user tries to modify it, a 403 HTTP error is returned.
 
@@ -181,8 +185,13 @@ The body also contains membership information.
 
 ### Add rights on entities for a Stellio User
 
-POST /ngsi-ld/v1/entityAccessControl/{subjectId}/attrs
-Sample payload: 
+This endpoint allows an user to give rights on entities it is admin of.
+
+It is available under `/ngsi-ld/v1/entityAccessControl/{sub}/attrs` and can be called with a `POST` request.
+
+The expected request body is a JSON object containing NGSI-LD Relationships:
+
+```json
 {
   “rCanRead”: [ 
     { 
@@ -203,18 +212,19 @@ Sample payload:
     …
   ],
 }
+```
 
-Only "rCanRead" and "rCanWrite" and "rCanAdmin" attributes can be appended
-Return: 204 if all operations succeeded, 207 if some failed (typically insufficient rights to perform the operation)
+Only `rCanRead` and `rCanWrite` and `rCanAdmin` attributes are allowed by this operation.
+
+It returns:
+
+- 204 if all operations succeeded
+- 207 if some failed (typically insufficient rights to perform the operation)
 
 ### Remove rights on an entity for a Stellio User
 
-DELETE /ngsi-ld/v1/entityAccessControl/{subjectId}/attrs/{entityId}
-Same principle than above but applied to delete rights a Stellio User has on a specific entity.
-Return: 204 if the operation succeeded
+This endpoint allows an user to remove rights of an user on an entity it is admin of.
 
-## Application of rights in queries on entities
+It is available under `/ngsi-ld/v1/entityAccessControl/{sub}/attrs/{entityId}` and can be called with a `DELETE` request.
 
-For `/entities` and `temporal/entities` queries, we generally have the id of the entity which is the subject of the request (except for search, that is dealt with separately). To be able to apply security checks, we need to know if the user has the right to perform this operation as an individual (this is just a check on the existence of a relationship of a given type(s)), as a member of a group (the same kind of check but with one level of indirection) or as a (OAuth2) client.
-
-For `/entityOperations` queries, checks are applied on a per-entity basis. Trying to modify or delete an unauthorized entity is of course denied and is notified in the details of the response.
+It returns 204 if the operation succeeded.
