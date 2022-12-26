@@ -32,15 +32,9 @@ This endpoint allows an user to remove the specific access policy set on a entit
 
 It is available under `/ngsi-ld/v1/entityAccessControl/{entityId}/attrs/specificAccessPolicy` and can be called with a `DELETE` request.
 
-## Application of rights in queries on entities
-
-For `/entities` and `temporal/entities` queries, we generally have the id of the entity which is the subject of the request (except for search, that is dealt with separately). To be able to apply security checks, we need to know if the user has the right to perform this operation as an individual (this is just a check on the existence of a relationship of a given type(s)), as a member of a group (the same kind of check but with one level of indirection) or as a (OAuth2) client.
-
-For `/entityOperations` queries, checks are applied on a per-entity basis. Trying to modify or delete an unauthorized entity is of course denied and is notified in the details of the response.
-
 ## Endpoints for rights management
 
-Stellio exposes endpoints that help in managing rights inside the context broker.
+Stellio exposes endpoints that help in managing rights on entities inside the context broker.
 
 ### Get authorized entites for the currently authenticated user 
 
@@ -50,7 +44,7 @@ It is available under `/ngsi-ld/v1/entityAccessControl/entities` and can be call
 
 The following request parameters are supported: 
 
-* `q`: restrict returned entities to the ones with a specific right. Only `rCanRead` and `rCanWrite` and `rCanAdmin` are accepted. A list is accepted (e.g, `q=rCanRead;rCanWrite`). This request parameter has no effect when user has the _stellio-admin_ role
+* `q`: restrict returned entities to the ones with a specific right. Only `rCanRead`, `rCanWrite` and `rCanAdmin` are accepted. A list is accepted (e.g, `q=rCanRead;rCanWrite`). This request parameter has no effect when user has the _stellio-admin_ role
 * `type`: restrict returned entities to a given entity type
 * `options`: use `sysAttrs` value to get the system attributes
 
@@ -63,7 +57,6 @@ There are several possible answers:
     { 
         “id”: "urn:ngsi-ld:Entity:01",
         “type”: "Entity",
-        “datasetId”: "urn:ngsi-ld:Dataset:Entity:01",
         “right”: { 
             “type”: “Property”, 
             “value”: “rCanWrite” 
@@ -80,14 +73,13 @@ There are several possible answers:
 ]
 ```
 
-* If user is admin of the entity, the response body will be under this form: 
+* If user is admin of the entity or has the _stellio-admin_ role, the response body will be under this form: 
 
 ```json
 [
     { 
         “id”: "urn:ngsi-ld:Entity:01",
         “type”: "Entity",
-        “datasetId”: "urn:ngsi-ld:Dataset:Entity:01",
         “right”: { 
             “type”: “Property”, 
             “value”: “rCanAdmin” 
@@ -99,11 +91,25 @@ There are several possible answers:
         “rCanRead”: [  
             {  
                 “type”: “Relationship”,  
-                “object”: “urn:ngsi-ld:User:01”     
+                “object”: “urn:ngsi-ld:User:2194588E-D3CE-47F9-B060-B77DB6EAAAD8”,
+                "subjectInfo": {
+                    "username": "username"
+                }
+
             }, 
             {  
                 “type”: “Relationship”,  
-                “object”: “urn:ngsi-ld:User:02”
+                “object”: “urn:ngsi-ld:Client:D7A09461-4FD1-4B96-A15E-1DCABD11FE04”
+                "subjectInfo": {
+                    "clientId": "client-id"
+                }
+            }, 
+            {  
+                “type”: “Relationship”,  
+                “object”: “urn:ngsi-ld:Group:5AD29EF5-5427-46DA-9573-7CA03F842701”
+                "subjectInfo": {
+                    "name": "Stellio Team"
+                }
             } 
         ], 
         “rCanWrite”: [ 
@@ -206,3 +212,9 @@ Return: 204 if all operations succeeded, 207 if some failed (typically insuffici
 DELETE /ngsi-ld/v1/entityAccessControl/{subjectId}/attrs/{entityId}
 Same principle than above but applied to delete rights a Stellio User has on a specific entity.
 Return: 204 if the operation succeeded
+
+## Application of rights in queries on entities
+
+For `/entities` and `temporal/entities` queries, we generally have the id of the entity which is the subject of the request (except for search, that is dealt with separately). To be able to apply security checks, we need to know if the user has the right to perform this operation as an individual (this is just a check on the existence of a relationship of a given type(s)), as a member of a group (the same kind of check but with one level of indirection) or as a (OAuth2) client.
+
+For `/entityOperations` queries, checks are applied on a per-entity basis. Trying to modify or delete an unauthorized entity is of course denied and is notified in the details of the response.
