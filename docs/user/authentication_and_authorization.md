@@ -97,22 +97,33 @@ There are several possible answers:
                 "type": "Relationship",  
                 "object": "urn:ngsi-ld:User:2194588E-D3CE-47F9-B060-B77DB6EAAAD8",
                 "subjectInfo": {
-                    "username": "stellio-user"
+                    "type": "Property",
+                    "value": {
+                        "type": "User",
+                        "username": "stellio-user"
+                    }
                 }
-
             }, 
             {  
                 "type": "Relationship",
                 "object": "urn:ngsi-ld:Client:D7A09461-4FD1-4B96-A15E-1DCABD11FE04",
                 "subjectInfo": {
-                    "clientId": "client-id"
+                    "type": "Property",
+                    "value": {
+                        "type": "Client",
+                        "clientId": "client-id"
+                    }
                 }
             }, 
             {  
                 "type": "Relationship",  
                 "object": "urn:ngsi-ld:Group:5AD29EF5-5427-46DA-9573-7CA03F842701",
                 "subjectInfo": {
-                    "name": "Stellio Team"
+                    "type": "Property",
+                    "value": {
+                        "type": "Group",
+                        "name": "Stellio Team"
+                    }
                 }
             } 
         ], 
