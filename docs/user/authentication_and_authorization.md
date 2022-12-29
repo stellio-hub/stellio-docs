@@ -48,8 +48,8 @@ It is available under `/ngsi-ld/v1/entityAccessControl/entities` and can be call
 
 The following request parameters are supported: 
 
-* `q`: restrict returned entities to the ones with a specific right. Only `rCanRead`, `rCanWrite` and `rCanAdmin` are accepted. A list is accepted (e.g, `q=rCanRead;rCanWrite`). This request parameter has no effect when user has the _stellio-admin_ role
-* `type`: restrict returned entities to a given entity type
+* `attrs`: restrict returned entities to the ones with a specific right. Only `rCanRead`, `rCanWrite` and `rCanAdmin` are accepted. A list is accepted (e.g, `attrs=rCanRead,rCanWrite`). This request parameter has no effect when user has the _stellio-admin_ role
+* `type`: restrict returned entities to given entity types
 * `options`: use `sysAttrs` value to get the system attributes
 
 There are several possible answers:
@@ -59,17 +59,17 @@ There are several possible answers:
 ```JSON
 [
     { 
-        “id”: "urn:ngsi-ld:Entity:01",
-        “type”: "Entity",
-        “right”: { 
-            “type”: “Property”, 
-            “value”: “rCanWrite” 
+        "id": "urn:ngsi-ld:Entity:01",
+        "type": "Entity",
+        "right": { 
+            "type": "Property", 
+            "value": "rCanWrite" 
         }, 
-        “specificAccessPolicy”: { 
-            “type”: “Property”, 
-            “value”: “AUTH_READ” 
+        "specificAccessPolicy": { 
+            "type": "Property", 
+            "value": "AUTH_READ" 
         }, 
-        @context: [ "https://my.context/context.jsonld" ] 
+        @context: [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
     },
     {
         ...
@@ -82,47 +82,47 @@ There are several possible answers:
 ```json
 [
     { 
-        “id”: "urn:ngsi-ld:Entity:01",
-        “type”: "Entity",
-        “right”: { 
-            “type”: “Property”, 
-            “value”: “rCanAdmin” 
+        "id": "urn:ngsi-ld:Entity:01",
+        "type": "Entity",
+        "right": { 
+            "type": "Property", 
+            "value": "rCanAdmin" 
         }, 
-        “specificAccessPolicy”: { 
-            “type”: “Property”, 
-            “value”: “AUTH_READ” 
+        "specificAccessPolicy": { 
+            "type": "Property", 
+            "value": "AUTH_READ" 
         }, 
-        “rCanRead”: [  
+        "rCanRead": [  
             {  
-                “type”: “Relationship”,  
-                “object”: “urn:ngsi-ld:User:2194588E-D3CE-47F9-B060-B77DB6EAAAD8”,
+                "type": "Relationship",  
+                "object": "urn:ngsi-ld:User:2194588E-D3CE-47F9-B060-B77DB6EAAAD8",
                 "subjectInfo": {
-                    "username": "username"
+                    "username": "stellio-user"
                 }
 
             }, 
             {  
-                “type”: “Relationship”,  
-                “object”: “urn:ngsi-ld:Client:D7A09461-4FD1-4B96-A15E-1DCABD11FE04”
+                "type": "Relationship",
+                "object": "urn:ngsi-ld:Client:D7A09461-4FD1-4B96-A15E-1DCABD11FE04",
                 "subjectInfo": {
                     "clientId": "client-id"
                 }
             }, 
             {  
-                “type”: “Relationship”,  
-                “object”: “urn:ngsi-ld:Group:5AD29EF5-5427-46DA-9573-7CA03F842701”
+                "type": "Relationship",  
+                "object": "urn:ngsi-ld:Group:5AD29EF5-5427-46DA-9573-7CA03F842701",
                 "subjectInfo": {
                     "name": "Stellio Team"
                 }
             } 
         ], 
-        “rCanWrite”: [ 
+        "rCanWrite": [ 
             … 
         ], 
-        “rCanAdmin”: [ 
+        "rCanAdmin": [ 
             … 
         ], 
-        @context: [ "https://my.context/context.jsonld" ] 
+        @context: [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
     },
     {
         ...
@@ -148,13 +148,13 @@ There are several possible answers:
 ```json
 [
     { 
-        “id”: "urn:ngsi-ld:Group:01",
-        “type”: "Group",
-        “name”: { 
-            “type”: “Property”, 
-            “value”: "EGM" 
+        "id": "urn:ngsi-ld:Group:01",
+        "type": "Group",
+        "name": { 
+            "type": "Property", 
+            "value": "EGM" 
         }, 
-        @context: [ "https://my.context/context.jsonld" ] 
+        @context: [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
     }
 ]
 ```
@@ -164,17 +164,17 @@ There are several possible answers:
 ```json
 [
     { 
-        “id”: "urn:ngsi-ld:Group:01",
-        “type”: "Group",
-        “name”: { 
-            “type”: “Property”, 
-            “value”: “EGM” 
+        "id": "urn:ngsi-ld:Group:01",
+        "type": "Group",
+        "name": { 
+            "type": "Property", 
+            "value": "EGM" 
         },
-        “isMemberOf”: {
-            “type”: “Property”, 
-            “value”: true
+        "isMemberOf": {
+            "type": "Property", 
+            "value": true
         },
-        @context: [ "https://my.context/context.jsonld" ] 
+        @context: [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
     }
 ]
 ```
@@ -193,22 +193,22 @@ The expected request body is a JSON object containing NGSI-LD Relationships:
 
 ```json
 {
-  “rCanRead”: [ 
+  "rCanRead": [ 
     { 
-      “type”: “Relationship”, 
-      “object”: “entityId1”,
-      “datasetId”: “urn:ngsi-ld:Dataset:01”
+      "type": "Relationship", 
+      "object": "entityId1",
+      "datasetId": "urn:ngsi-ld:Dataset:01"
     },
     { 
-      “type”: “Relationship”, 
-      “object”: “entityId2” 
-      “datasetId”: “urn:ngsi-ld:Dataset:02”
+      "type": "Relationship", 
+      "object": "entityId2" 
+      "datasetId": "urn:ngsi-ld:Dataset:02"
     }
   ],
-  “rCanWrite”: [
+  "rCanWrite": [
     …
   ],
-  “rCanAdmin”: [
+  "rCanAdmin": [
     …
   ],
 }
