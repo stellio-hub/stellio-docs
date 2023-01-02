@@ -50,7 +50,6 @@ The following request parameters are supported:
 
 * `attrs`: restrict returned entities to the ones with a specific right. Only `rCanRead`, `rCanWrite` and `rCanAdmin` are accepted. A list is accepted (e.g, `attrs=rCanRead,rCanWrite`). This request parameter has no effect when user has the _stellio-admin_ role
 * `type`: restrict returned entities to given entity types
-* `options`: use `sysAttrs` value to get the system attributes
 
 There are several possible answers:
 
