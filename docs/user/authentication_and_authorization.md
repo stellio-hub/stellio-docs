@@ -3,6 +3,7 @@
 ## Pre-requisites
 
 For all the API operations described in this page, the [EGM's authorization context](https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld) has to be included in every operation.
+These operations respect the rules of the section 6.3.5 of the NGSI-LD specifications ("JSON-LD @context resolution"), with the exception that the [EGM's compound authorization context](https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization-compound.jsonld) is considered as the default context for all operations found here.
 
 ## Specific access policy
 
@@ -68,7 +69,7 @@ There are several possible answers:
             "type": "Property", 
             "value": "AUTH_READ" 
         }, 
-        @context: [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
+        "@context": [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
     },
     {
         ...
@@ -135,7 +136,7 @@ There are several possible answers:
         "rCanAdmin": [ 
             … 
         ], 
-        @context: [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
+        "@context": [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
     },
     {
         ...
@@ -167,7 +168,7 @@ There are several possible answers:
             "type": "Property", 
             "value": "EGM" 
         }, 
-        @context: [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
+        "@context": [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
     }
 ]
 ```
@@ -187,7 +188,7 @@ There are several possible answers:
             "type": "Property", 
             "value": true
         },
-        @context: [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
+        "@context": [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ] 
     }
 ]
 ```
@@ -214,7 +215,7 @@ The expected request body is a JSON object containing NGSI-LD Relationships:
     },
     { 
       "type": "Relationship", 
-      "object": "entityId2" 
+      "object": "entityId2",
       "datasetId": "urn:ngsi-ld:Dataset:02"
     }
   ],
