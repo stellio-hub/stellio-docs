@@ -15,8 +15,6 @@ nav:
   - API Walkthrough: 'API_walkthrough.md'
   - User & Programmers Manual:
       - Authentication and authorization: 'user/authentication_and_authorization.md'
-      - Visualizing the graph: 'user/visualizing_graph.md'
-      - Data model: 'user/data_model.md'
       - Internal event model: 'user/internal_event_model.md'
   - Installation & Administration Manual:
       - Production deployment: 'admin/production_deployment.md'
@@ -32,3 +30,4 @@ nav:
         - Upgrading to 1.7.0: 'admin/upgrading_to_1.7.0.md'
         - Upgrading to 1.8.0: 'admin/upgrading_to_1.8.0.md'
         - Upgrading to 1.9.0: 'admin/upgrading_to_1.9.0.md'
+        - Upgrading to 2.0.0: 'admin/upgrading_to_2.0.0.md'

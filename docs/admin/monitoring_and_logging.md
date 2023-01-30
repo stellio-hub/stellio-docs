@@ -8,7 +8,7 @@ Setting up of Prometheus is of course beyond the scope of this documentation, th
 
 However, it is recommended to monitor the VMs with [node_exporter]("https://github.com/prometheus/node_exporter") and the Docker containers with [cAdvisor]("https://github.com/google/cadvisor").
 
-The Stellio services can also be configured to expose an [health endpoint]("https://docs.spring.io/spring-boot/docs/2.3.4.RELEASE/reference/html/production-ready-features.html#production-ready-health") and [Prometheus metrics]("https://docs.spring.io/spring-boot/docs/2.3.4.RELEASE/reference/html/production-ready-features.html#production-ready-metrics-export-prometheus") (in parenthesis, the name of the environement variable to use when injecting the values into a Docker container):
+The Stellio services can also be configured to expose an [health endpoint]("https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-health") and [Prometheus metrics]("https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-metrics-export-prometheus") (in parenthesis, the name of the environement variable to use when injecting the values into a Docker container):
 
 - `management.endpoint.prometheus.enabled` (`MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED`): `true`
 - `management.endpoints.web.exposure.include` (`MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE`): `health,prometheus`
@@ -17,13 +17,13 @@ The Stellio services can also be configured to expose an [health endpoint]("http
 In a docker-compose or Docker Swarm based deployment, the environement variables can be declared by adding the following in the `environment` section:
 
 ```
-  entity-service:
-    container_name: entity-service
-    image: stellio/stellio-entity-service:latest
+  search-service:
+    container_name: search-service
+    image: stellio/stellio-search-service:latest-dev
     environment:
       - MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED=${MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED}
       - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=${MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE}
-      - MANAGEMENT_METRICS_TAGS_APPLICATION=Entity Service - ${MANAGEMENT_METRICS_PF_TAG}
+      - MANAGEMENT_METRICS_TAGS_APPLICATION=Search Service - ${MANAGEMENT_METRICS_PF_TAG}
 ```
 
 ### Example Prometheus configurations
@@ -40,9 +40,6 @@ An example Prometheus configuration to get health information from Stellio servi
       - targets: ['http://stellio-host:8080/actuator/health']
         labels:
           name: 'API Gateway'
-      - targets: ['http://stellio-host:8082/actuator/health']
-        labels:
-          name: 'Entity Service'
       - targets: ['http://stellio-host:8083/actuator/health']
         labels:
           name: 'Search Service'
@@ -82,7 +79,6 @@ An example Prometheus configuration to get metrics information from Stellio serv
     metrics_path: '/actuator/prometheus'
     scrape_interval: 30s
     static_configs:
-      - targets: ['stellio-host:8082'] # 8082 : Entity service
       - targets: ['stellio-host:8083'] # 8083 : Search service
       - targets: ['stellio-host:8084'] # 8084 : Subscription service
 ```
@@ -117,12 +113,9 @@ Some classic alerts that are generally recommended:
 ```
   - alert: container_down_stellio
     expr: |
-          absent(container_memory_usage_bytes{name="entity-service",job="Stellio Docker"}) or
           absent(container_memory_usage_bytes{name="api-gateway",job="Stellio Docker"}) or
           absent(container_memory_usage_bytes{name="postgres",job="Stellio Docker"}) or
-          absent(container_memory_usage_bytes{name="zookeeper",job="Stellio Docker"}) or
           absent(container_memory_usage_bytes{name="kafka",job="Stellio Docker"}) or
-          absent(container_memory_usage_bytes{name="neo4j",job="Stellio Docker"}) or
           absent(container_memory_usage_bytes{name="subscription-service",job="Stellio Docker"}) or
           absent(container_memory_usage_bytes{name="search-service",job="Stellio Docker"})
     for: 30s

@@ -1,11 +1,9 @@
 # Overview
 
-Stellio is composed of 3 business services:
+Stellio is composed of 2 business services:
 
--   Entity service is in charge of managing the information context, it
-    is backed by a [neo4j](https://neo4j.com) database
--   Search service is in charge of handling the temporal (and
-    geospatial) queries, it is backed by a
+-   Search service is in charge of handling the context information as well as the 
+    temporal (and geospatial) queries, it is backed by a
     [TimescaleDB](https://www.timescale.com/) database
 -   Subscription service is in charge of managing subscriptions and
     subsequent notifications, it is backed by a
@@ -34,11 +32,10 @@ docker-compose up -d && docker-compose logs -f
 It will start all the services composing the Stellio context broker platform and expose them on the following ports:
 
 -   API Gateway: 8080
--   Entity service: 8082
 -   Search service: 8083
 -   Subscription service: 8084
 
-Please note that the environment and scripts are validated on Ubuntu 19.10+ and MacOS. Some errors may occur on other platforms.
+Please note that the environment and scripts are validated on recent Ubuntu versions and MacOS. Some errors may occur on other platforms.
 
 Docker images are available on [Docker Hub](https://hub.docker.com/orgs/stellio/repositories).
 
@@ -48,20 +45,20 @@ Docker images are available on [Docker Hub](https://hub.docker.com/orgs/stellio/
 
 Requirements:
 
--   Java 11 (we recommend using [sdkman!](https://sdkman.io/) to install
+-   Java 17 (we recommend using [sdkman!](https://sdkman.io/) to install
     and manage versions of the JDK)
 
 To develop on a specific service, you can use the provided `docker-compose.yml` file inside each service's directory, for
 instance:
 
 ```shell
-cd entity-service docker-compose up -d && docker-compose logs -f
+cd search-service docker-compose up -d && docker-compose logs -f
 ```
 
 Then, from the root directory, launch the service:
 
 ```shell
-./gradlew entity-service:bootRun
+./gradlew search-service:bootRun
 ```
 
 ## Running the tests
@@ -72,7 +69,7 @@ thanks to Spring Boot embedded test support and to the great [TestContainers](ht
 For instance, you can launch the test suite for entity service with the following command:
 
 ```shell
-./gradlew entity-service:test
+./gradlew search-service:test
 ```
 
 ## Building the project
@@ -91,7 +88,7 @@ For each service, a self executable jar is produced in the `build/libs` director
 If you want to build only one of the services, you can launch:
 
 ```shell
-./gradlew entity-service:build
+./gradlew search-service:build
 ```
 
 ## Working locally with Docker images
@@ -102,19 +99,19 @@ to Docker Hub, you can follow the below instructions:
 -   Build a tar image:
 
 ```shell
-./gradlew entity-service:jibBuildTar
+./gradlew search-service:jibBuildTar
 ```
 
 -   Load the tar image into Docker:
 
 ```shell
-docker load --input entity-service/build/jib-image.tar
+docker load --input search-service/build/jib-image.tar
 ```
 
 -   Run the image:
 
 ```shell
-docker run stellio/stellio-entity-service:latest
+docker run stellio/stellio-search-service:latest-dev
 ```
 
 # Usage
