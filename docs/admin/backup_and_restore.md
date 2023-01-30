@@ -139,7 +139,7 @@ docker-compose stop kafka
 docker run --rm --volumes-from kafka -v $BACKUP_DIR:/backup ubuntu tar -C /var/lib/kafka/data -xzf /backup/kafka_$backup_date.tar.gz --strip-components 4
 ```
 
-## Step 4 - Restart Stellio
+## Step 3 - Restart Stellio
 
 ```shell
 cd $STELLIO_COMPOSE_DIR
