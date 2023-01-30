@@ -201,6 +201,8 @@ The body also contains membership information.
 
 This endpoint allows an user to give rights on entities it is admin of.
 
+These rights will be given to another user or to a group. For that it is neccessary to provide the subject id of this one (this is not entity id of user or group).
+
 It is available under `/ngsi-ld/v1/entityAccessControl/{sub}/attrs` and can be called with a `POST` request.
 
 The expected request body is a JSON object containing NGSI-LD Relationships:
@@ -237,7 +239,9 @@ It returns:
 
 ### Remove rights on an entity for a Stellio User
 
-This endpoint allows an user to remove rights of an user on an entity it is admin of.
+This endpoint allows an user to remove rights of an user (or group) on an entity it is admin of.
+
+To know which user (or group) we want to remove the right, the subject id of this one must be provided (this is not entity id of user or group). The target entity equal
 
 It is available under `/ngsi-ld/v1/entityAccessControl/{sub}/attrs/{entityId}` and can be called with a `DELETE` request.
 
