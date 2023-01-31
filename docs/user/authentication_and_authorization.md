@@ -241,7 +241,7 @@ It returns:
 
 This endpoint allows an user to remove rights of an user (or group) on an entity it is admin of.
 
-As when adding rights, the user or group whose the right is to be removed is identified by its 'sub' (and not by the pseudo entity id of an user or group). It is necessary to provide the 'entity_id' of the target entity.
+As when adding rights, the user or group whose the right is to be removed is identified by its `sub` (and not by the pseudo entity id of an user or group). It is necessary to provide the 'entity_id' of the target entity.
 
 It is available under `/ngsi-ld/v1/entityAccessControl/{sub}/attrs/{entityId}` and can be called with a `DELETE` request.
 
