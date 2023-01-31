@@ -201,7 +201,7 @@ The body also contains membership information.
 
 This endpoint allows an user to give rights on entities it is admin of.
 
-These rights will be given to another user or to a group. For that it is neccessary to provide the subject id of this one (this is not entity id of user or group).
+These rights will be given to another user or to a group. For that it is necessary to provide the `sub` of this one (and not the pseudo entity id of an user or group).
 
 It is available under `/ngsi-ld/v1/entityAccessControl/{sub}/attrs` and can be called with a `POST` request.
 
@@ -241,7 +241,8 @@ It returns:
 
 This endpoint allows an user to remove rights of an user (or group) on an entity it is admin of.
 
-To know which user (or group) we want to remove the right, the subject id of this one must be provided (this is not entity id of user or group). The target entity equal
+To know which user (or group) we want to remove the right, the 'sub' of this one must be provided (and not the pseudo entity id of an user or group).
+On the other hand, it is necessary to provide the 'entity_id' of the target entity.
 
 It is available under `/ngsi-ld/v1/entityAccessControl/{sub}/attrs/{entityId}` and can be called with a `DELETE` request.
 
