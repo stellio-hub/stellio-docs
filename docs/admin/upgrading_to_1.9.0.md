@@ -1,6 +1,6 @@
 # Upgrading to 1.9.0
 
-This note describes changes introduced in Stellio 1.9.0
+This note describes the necessary steps to upgrade to Stellio 1.9.0
 
 ## New endpoints for rights management
 
