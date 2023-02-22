@@ -1,6 +1,6 @@
 # Upgrading to 2.0.0
 
-This note describes changes introduced in Stellio 2.0.0
+This note describes the necessary steps to upgrade to Stellio 2.0.0
 
 ## Introduction
 
