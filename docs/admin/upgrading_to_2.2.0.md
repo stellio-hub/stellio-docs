@@ -21,3 +21,5 @@ set watched_attributes = 'https://my.ontology.org/domain#term'
 -- applied to all or only some of the existing subscriptions
 -- where id like 'urn:ngsi-ld:Subscription:BusinessContext:%';
 ```
+
+Also, when serving notifications in JSON format, Stellio may have to convey a link to JSON-LD contexts hosted by Stellio in case there is more than one context associated to the subscription (and thus cannot be included as a `Link` header in the request). In order to build an accessible link, a new configuration property has been added and must be configured: `APPLICATION_STELLIO_URL` (see https://github.com/stellio-hub/stellio-context-broker/blob/develop/.env#L16).  
