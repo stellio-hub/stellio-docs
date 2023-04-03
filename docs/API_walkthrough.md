@@ -13,7 +13,7 @@ Export the link to the JSON-LD context used in this use case in an environment v
 the requests:
 
 ````shell
-export CONTEXT_LINK="<https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld>; rel=http://www.w3.org/ns/json-ld#context; type=application/ld+json"
+export CONTEXT_LINK="<https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
 ````
 
 ## Starting the Stellio Context Broker
@@ -456,8 +456,8 @@ http PATCH http://localhost:8080/ngsi-ld/v1/entities/urn:ngsi-ld:BeeHive:01/attr
 ```shell
 http http://localhost:8080/ngsi-ld/v1/temporal/entities/urn:ngsi-ld:BeeHive:01 \
     timerel==between \
-    time==2019-10-25T12:00:00Z \
-    endTime==2021-10-27T12:00:00Z \
+    timeAt==2019-10-25T12:00:00Z \
+    endTimeAt==2021-10-27T12:00:00Z \
     Link:$CONTEXT_LINK
 ```
 
@@ -528,8 +528,8 @@ http http://localhost:8080/ngsi-ld/v1/temporal/entities/urn:ngsi-ld:BeeHive:01?o
     option==temporalValues \
     attrs==temperature \ 
     timerel==between \
-    time==2019-10-25T12:00:00Z \
-    endTime==2020-10-27T12:00:00Z \
+    timeAt==2019-10-25T12:00:00Z \
+    endTimeAt==2020-10-27T12:00:00Z \
     Link:$CONTEXT_LINK
 ```
 
