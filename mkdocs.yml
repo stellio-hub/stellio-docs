@@ -15,6 +15,7 @@ nav:
   - API Walkthrough: 'API_walkthrough.md'
   - User & Programmers Manual:
       - Authentication and authorization: 'user/authentication_and_authorization.md'
+      - Multitenancy: 'user/multitenancy.md'
       - Internal event model: 'user/internal_event_model.md'
   - Installation & Administration Manual:
       - Production deployment: 'admin/production_deployment.md'
