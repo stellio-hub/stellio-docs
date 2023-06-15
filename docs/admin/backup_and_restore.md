@@ -110,18 +110,6 @@ exit # from the container
 docker-compose stop postgres
 ```
 
-## Step 2 - Restore Kafka
-
-```shell
-cd $STELLIO_COMPOSE_DIR
-# Start and stop kafka to create the container and volume if it does not yet exist
-docker-compose up -d kafka
-docker-compose logs -f kafka # wait for kafka to finish starting
-docker-compose stop kafka
-
-docker run --rm --volumes-from kafka -v $BACKUP_DIR:/backup ubuntu tar -C /var/lib/kafka/data -xzf /backup/kafka_$backup_date.tar.gz --strip-components 4
-```
-
 ## Step 3 - Restart Stellio
 
 ```shell
