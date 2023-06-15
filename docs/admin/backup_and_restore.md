@@ -32,23 +32,6 @@ mv /tmp/postgres_search_$now.gz $BACKUP_DIR/.
 mv /tmp/postgres_subscription_$now.gz $BACKUP_DIR/.
 
 echo
-echo "Stopping Stellio containers (to backup Kafka)"
-
-cd $STELLIO_COMPOSE_DIR
-/usr/local/bin/docker-compose -f docker-compose.yml stop
-
-echo
-echo "Performing a backup of Kafka"
-
-docker run --rm --volumes-from kafka -v $BACKUP_DIR:/backup ubuntu tar cvf /backup/kafka_$now.tar /var/lib/kafka/data
-gzip -f $BACKUP_DIR/kafka_$now.tar
-
-echo
-echo "Restarting Stellio containers"
-
-/usr/local/bin/docker-compose -f docker-compose.yml start
-
-echo
 echo "Deleting backups older than $DAYS_HISTORY days"
 
 find $BACKUP_DIR -mtime +$DAYS_HISTORY -delete
