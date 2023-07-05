@@ -25,7 +25,7 @@ application.tenants[1].issuer = https://sso.eglobalmark.com/auth/realms/stellio-
 application.tenants[1].dbSchema = stellio-dev
 ```
 
-Default tenant must always be declared with the `urn:ngsi-ld:tenant:default` URI (as specified by the NGSI-LD API specification, it does not have to be declared in the HTTP requests and is used if no tenant is specified in a request).
+Default tenant must always be declared with the `urn:ngsi-ld:tenant:default` URI (but, as specified by the NGSI-LD API specification, it does not have to be declared in the HTTP requests and is used if no tenant is specified in a request).
 
 To add a tenant:
 
@@ -33,5 +33,25 @@ To add a tenant:
 * If authentication is enabled, create the realm in Keycloak
 * Restart the context broker
 * The DB schema is automatically created when the context broker restarts
+
+When running with the Docker images and using the docker-compose configuration, it is possible to declare the tenants in the environment section of the search and subscription services:
+
+```yaml
+  search-service:
+    environment:
+      - APPLICATION_TENANTS_0_ISSUER=${APPLICATION_TENANTS_0_ISSUER}
+      - APPLICATION_TENANTS_0_URI=${APPLICATION_TENANTS_0_URI}
+      - APPLICATION_TENANTS_0_DBSCHEMA=${APPLICATION_TENANTS_0_DBSCHEMA}
+```
+
+Where the 3 environment variables can be declared in the `.env` file:
+
+```shell
+APPLICATION_TENANTS_0_ISSUER=https://sso.eglobalmark.com/auth/realms/stellio
+APPLICATION_TENANTS_0_URI=urn:ngsi-ld:tenant:default
+APPLICATION_TENANTS_0_DBSCHEMA=public
+```
+
+An example configuration can be seen in the docker-compose file available in the GitHub repository.
 
 Please note that the associated Keycloak realm must exist when the application starts since the context broker will try to read its configuration.
