@@ -26,7 +26,7 @@ docker-compose stop
 docker-compose rm postgres
 docker-compose pull
 docker-compose up -d
-source .env
-docker exec -it stellio-postgres psql --host=localhost -d $STELLIO_SEARCH_DB_DATABASE -U $POSTGRES_USER -W -X -c "ALTER EXTENSION timescaledb UPDATE;"
-docker exec -it stellio-postgres psql --host=localhost -d $STELLIO_SUBSCRIPTION_DB_DATABASE -U $POSTGRES_USER -W -X -c "ALTER EXTENSION timescaledb UPDATE;"
+docker exec -it stellio-postgres psql --host=localhost -d stellio_search -U stellio -W -X -c "ALTER EXTENSION timescaledb UPDATE;"
+docker exec -it stellio-postgres psql --host=localhost -d stellio_subscription -U stellio -W -X -c "ALTER EXTENSION timescaledb UPDATE;"
+docker-compose restart stellio-postgres stellio-search-service stellio-subscription-service
 ```
