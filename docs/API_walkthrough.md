@@ -6,7 +6,7 @@ This quickstart guide shows a real use case scenario of interaction with the API
 
 The provided examples make use of the HTTPie command line tool (installation instructions: [https://httpie.org/docs#installation](https://httpie.org/docs#installation))
 
-All requests are grouped in a Postman collection that can be found [here](https://github.com/stellio-hub/stellio-docs/blob/master/collection/API_Quick_Start.postman_collection.json).
+All requests are grouped in a Postman collection that can be found [here](https://raw.githubusercontent.com/stellio-hub/stellio-docs/master/collection/API_Quick_Start.postman_collection.json).
 For more details about how to import a Postman collection see [https://learning.postman.com/docs/getting-started/importing-and-exporting-data](https://learning.postman.com/docs/getting-started/importing-and-exporting-data).
 
 Export the link to the JSON-LD context used in this use case in an environment variable for easier referencing in
