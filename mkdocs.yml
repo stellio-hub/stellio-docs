@@ -21,6 +21,7 @@ nav:
       - Monitoring and logging: 'admin/monitoring_and_logging.md'
       - Backup and restore: 'admin/backup_and_restore.md'
       - Keycloak integration: 'admin/keycloak_integration.md'
+      - Performance considerations and results: 'admin/performance.md'
       - Misc configuration tips: 'admin/misc_configuration_tips.md'
       - Upgrading:
         - General notes: 'admin/upgrading_general_notes.md'
