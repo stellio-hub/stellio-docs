@@ -125,6 +125,7 @@ While creating and configuring users, groups and clients in Keycloak, the follow
 ```json
 {
   "operationType":"ENTITY_CREATE",
+  "tenantUri": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "entityTypes":["User"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\",\"type\":\"User\",\"username\":{\"type\":\"Property\",\"value\":\"user@mail.com\"},\"roles\":{\"type\":\"Property\",\"value\":\"stellio-creator\"}}",
@@ -137,6 +138,7 @@ While creating and configuring users, groups and clients in Keycloak, the follow
 ```json
 {
   "operationType":"ENTITY_CREATE",
+  "tenantUri": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "entityTypes":["Group"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\",\"type\":\"Group\",\"name\":{\"type\":\"Property\",\"value\":\"Group name\"}}",
@@ -149,6 +151,7 @@ While creating and configuring users, groups and clients in Keycloak, the follow
 ```json
 {
   "operationType":"ENTITY_CREATE",
+  "tenantUri": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
   "entityTypes":["Client"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj\",\"type\":\"Client\",\"clientId\":{\"type\":\"Property\",\"value\":\"client-id\"}}",
@@ -163,6 +166,7 @@ It is the identifier that is transmitted when a client does a direct request on 
 ```json
 {
   "operationType":"ATTRIBUTE_APPEND",
+  "tenantUri": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
   "entityTypes":["Client"],
   "attributeName":"serviceAccountId",
@@ -179,6 +183,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ATTRIBUTE_APPEND",
+  "tenantUri": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
   "entityTypes":["Client"],
   "attributeName":"roles",
@@ -193,6 +198,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ATTRIBUTE_APPEND",
+  "tenantUri": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "entityTypes":["User"],
   "attributeName":"isMemberOf",
@@ -208,6 +214,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ATTRIBUTE_DELETE",
+  "tenantUri": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "entityTypes":["User"],
   "attributeName":"isMemberOf",
@@ -222,6 +229,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ATTRIBUTE_REPLACE",
+  "tenantUri": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "entityTypes":["Group"],
   "attributeName":"name",
@@ -236,6 +244,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ENTITY_DELETE",
+  "tenantUri": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "entityTypes":["Group"],
   "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]

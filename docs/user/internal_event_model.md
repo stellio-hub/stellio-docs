@@ -22,9 +22,9 @@ Here is the list of supported events, accompanied by a sample payload:
 
 - Entity creation
 
-
 ```json
 {
+    "tenantUri": "urn:ngsi-ld:tenant:stellio",
     "entityId": "urn:ngsi-ld:Vehicle:A4567",
     "entityType": "Vehicle",
     "operationPayload": "{\"id\": \"urn:ngsi-ld:Vehicle:A4567\", \"type\": \"Vehicle\", \"brandName\": { \"type\": \"Property\", \"value\": \"Mercedes\"}}",
@@ -48,6 +48,7 @@ Same payload as when creating an entity, but with an `OPERATION_TYPE` set to `EN
 
 ```json
 {
+    "tenantUri": "urn:ngsi-ld:tenant:stellio",
     "entityId": "urn:ngsi-ld:Vehicle:A4567",
     "entityType": "Vehicle",
     "contexts": [
@@ -62,6 +63,7 @@ Same payload as when creating an entity, but with an `OPERATION_TYPE` set to `EN
 
 ```json
 {
+    "tenantUri": "urn:ngsi-ld:tenant:stellio",
     "entityId": "urn:ngsi-ld:Vehicle:A4567",
     "entityType": "Vehicle",
     "attributeName": "speed",
@@ -85,6 +87,7 @@ Same payload as when appending an attribute, but with an `OPERATION_TYPE` set to
 
 ```json
 {
+    "tenantUri": "urn:ngsi-ld:tenant:stellio",
     "entityId": "urn:ngsi-ld:Vehicle:A4567",
     "entityType": "Vehicle",
     "attributeName": "speed",
@@ -103,6 +106,7 @@ Same payload as when appending an attribute, but with an `OPERATION_TYPE` set to
 
 ```json
 {
+    "tenantUri": "urn:ngsi-ld:tenant:stellio",
     "entityId": "urn:ngsi-ld:Vehicle:A4567",
     "entityType": "Vehicle",
     "attributeName": "speed",
@@ -120,6 +124,7 @@ Same payload as when appending an attribute, but with an `OPERATION_TYPE` set to
 
 ```json
 {
+    "tenantUri": "urn:ngsi-ld:tenant:stellio",
     "entityId": "urn:ngsi-ld:Vehicle:A4567",
     "entityType": "Vehicle",
     "attributeName": "speed",
