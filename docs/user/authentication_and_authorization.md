@@ -148,7 +148,6 @@ The body also contains the other users who have a right on the entity.
 
 * If authentication is not enabled, a 204 (No content) response is returned. 
 
-
 ### Get groups the currently authenticated user belongs to 
 
 This endpoint allows an user to get the groups it belongs to.
@@ -196,6 +195,39 @@ There are several possible answers:
 The body also contains membership information. 
 
 * If authentication is not enabled, a 204 (No content) response is returned. 
+
+### Get users
+
+This endpoint allows an user with `stellio-admin` role to get a list of all users
+
+It is available under `/ngsi-ld/v1/entityAccessControl/users` and can be called with a `GET` request.
+
+* If user is not _stellio-admin_, an error 403 is returned
+* If user is _stellio-admin_, all users are returned (`givenName` and `familyName` are optional fields that may not be part of the response):
+
+```json
+[
+    {
+        "id": "urn:ngsi-ld:User:01",
+        "type": "User",
+        "username": {
+            "type": "Property",
+            "value": "username"
+        },
+        "givenName": {
+            "type": "Property",
+            "value": "givenname"
+        },
+        "familyName": {
+            "type": "Property",
+            "value": "familyname"
+        },
+        "@context": [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ]
+    }
+]
+```
+
+* If authentication is not enabled, a 204 (No content) response is returned.
 
 ### Add rights on entities for a Stellio User
 
