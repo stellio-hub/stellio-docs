@@ -222,10 +222,19 @@ It is available under `/ngsi-ld/v1/entityAccessControl/users` and can be called 
             "type": "Property",
             "value": "familyname"
         },
+        "subjectInfo": {
+            "type": "Property",
+            "value": {
+                "gender": "Male",
+                "city": "Nantes"
+            }
+        },
         "@context": [ "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld" ]
     }
 ]
 ```
+
+The `subjectInfo` property is present only if other user attributes are known to the system.
 
 * If authentication is not enabled, a 204 (No content) response is returned.
 
