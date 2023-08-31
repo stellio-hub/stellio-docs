@@ -1,10 +1,10 @@
-# Upgrading to 2.6.0
+# Upgrading to 2.7.0
 
-This note describes the necessary steps to upgrade to Stellio 2.6.0
+This note describes the necessary steps to upgrade to Stellio 2.7.0
 
 ## Multitenancy
 
-Starting from version 2.6.0, Stellio supports NGSI-LD Tenants. Please read the [multitenancy page](../user/multinenancy.md) for an explanation of the design and the way to configure and use them.
+Starting from version 2.7.0, Stellio supports NGSI-LD Tenants. Please read the [multitenancy page](../user/multinenancy.md) for an explanation of the design and the way to configure and use them.
 
 ## Renaming of properties
 
