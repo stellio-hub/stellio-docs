@@ -18,3 +18,15 @@ If running Stellio in Kubernetes, it can be configured in the deployments:
 - name: SERVER_MAX_HTTP_REQUEST_HEADER_SIZE
   value: 512KB
 ```
+
+## Change the log level of a library / namespace
+
+Add a new environment for the target namespace. For instance, adding:
+
+```
+- LOGGING_LEVEL_IO_R2DBC_POSTGRESQL_QUERY=DEBUG
+```
+
+Will set the DEBUG level for the `io.r2dbc.postgresql.QUERY` namespace.
+
+For this change to take effet, the Docker container has to be re-created.
