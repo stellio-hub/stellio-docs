@@ -24,7 +24,7 @@ If running Stellio in Kubernetes, it can be configured in the deployments:
 Add a new environment for the target namespace. For instance, adding:
 
 ```
-- LOGGING_LEVEL_IO_R2DBC_POSTGRESQL_QUERY=DEBUG
+      - LOGGING_LEVEL_IO_R2DBC_POSTGRESQL_QUERY=DEBUG
 ```
 
 Will set the DEBUG level for the `io.r2dbc.postgresql.QUERY` namespace.
