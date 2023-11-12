@@ -136,3 +136,36 @@ Same payload as when appending an attribute, but with an `OPERATION_TYPE` set to
     "operationType": "ATTRIBUTE_DELETE_ALL_INSTANCES"
 }
 ```
+
+## Mapping of entity operations to internal event type
+
+Below is a table summarizing the type of internal event triggered by Stellio for each entity operation:
+
+| Internal event                 | Entity operation                                                                        |
+| ------------------------------ | --------------------------------------------------------------------------------------- |
+| ENTITY_CREATE                  | Entity create<br>Batch entity create<br>Batch entity upsert                             |
+| ENTITY_REPLACE                 | Entity replace                                                                          |
+| ENTITY_DELETE                  | Entity delete<br>Batch entity delete                                                    |
+| ATTRIBUTE_APPEND               | Entity merge<br>Append entity attributes<br>Batch entity update<br>Batch entity upsert  |
+| ATTRIBUTE_UPDATE               | Entity merge<br>Partial attribute update                                                |
+| ATTRIBUTE_REPLACE              | Replace attribute<br>Append entity attributes<br>Update entity attributes<br>Batch entity update<br>Batch entity upsert |
+| ATTRIBUTE_DELETE               | Delete attribute                                                                        |
+| ATTRIBUTE_DELETE_ALL_INSTANCES | Delete attribute (deleteAll mode)                                                       |
+
+## Mapping to `notificationTrigger` in subscriptions
+
+Starting from version 1.6.1 of the NGSI-LD specification, subscriptions support a new `notificationTrigger` member (see 5.2.12 for more details).
+The notification trigger indicates what kind of changes shall trigger a notification.
+
+As entity related events are received using the internal event model, the following mapping is used by Stellio:
+
+| Internal event                 | Notification trigger     |
+| ------------------------------ | ------------------------ |
+| ENTITY_CREATE                  | entityCreated            |
+| ENTITY_REPLACE                 | list of attributeCreated |
+| ENTITY_DELETE                  | entityDeleted            |
+| ATTRIBUTE_APPEND               | attributeCreated         |
+| ATTRIBUTE_UPDATE               | attributeUpdated         |
+| ATTRIBUTE_REPLACE              | attributeUpdated         |
+| ATTRIBUTE_DELETE               | attributeDeleted         |
+| ATTRIBUTE_DELETE_ALL_INSTANCES | attributeDeleted         |
