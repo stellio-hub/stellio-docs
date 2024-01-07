@@ -2,65 +2,86 @@
 
 Stellio can be used with the [Keycloak](https://www.keycloak.org) IAM solution.
 
+This page presents a basic solution to show how to setup the integration between Stellio and Keycloak. **It is only meant for development purposes**.
+
+In the remainder of this page, it is considered that Stellio is running using the [docker-compose configuration](https://github.com/stellio-hub/stellio-context-broker/blob/develop/docker-compose.yml) provided on GitHub. Before starting this tutorial, ensure that the Stellio's Kafka broker is advertising its `PLAINTEXT_HOST` listener on an IP address that will be resolvable from the Keycloak container (running in its own docker network and not the same Docker network than Stellio), e.g.:
+
+```yaml
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://stellio-kafka:9092,PLAINTEXT_HOST://{kafka_ip}:29092
+      # Other environment variables
+```
+
+Where `kafka_ip` is the IP address where the Stellio's Kafka instance is reachable outside the Docker network (e.g., your laptop or VM IP)
+
+Keycloak will be launched using the docker-compose configuration provided later in this document, in **development** mode.
+
 ## Connect Keycloak with Stellio
 
-Installation and configuration of Keycloak is not described here, as it is well documented on the Keycloak site.
+Configuration of Keycloak is not described here, as it is well documented on the Keycloak site.
 
-In order to connect Stellio with Keycloak, the following steps have to be performed:
+In order to connect Stellio with Keycloak, the following steps have to be followed:
 
-- Use the [Keycloak Docker image provided by EGM](https://hub.docker.com/repository/docker/easyglobalmarket/keycloak)
-- Create a realm in Keycloak (if not yet existing)
+- Configure and run the [Keycloak Docker image provided by EGM](https://hub.docker.com/repository/docker/easyglobalmarket/keycloak)
+- Create a realm in Keycloak
 - Create the builtin roles known and used by Stellio
 - Configure Keycloak to propagate user, group and client events to Stellio
 - Activate and configure authentication in Stellio
 
 ### Use the Keycloak Docker image by EGM
 
-The provided Docker image extends the official Keycloak Docker image to bundle it with two SPIs:
+The provided Docker image extends the official Keycloak Docker image to bundle it with three SPIs:
 
-- The Stellio event listener that propagates provisioning events to the Kafka message broker used by Stellio
+- An event listener that propagates provisioning events to the Kafka message broker used by Stellio
+- An account notifier that sends an email to the realm admins whenever a new account is created
 - A metrics listener that exposes an endpoint that can be consumed by Prometheus
 
-To start with, you can use this sample Docker compose file (do not forget to create a `.env` file with the needed environment variables):
+To start with, you can use this sample Docker compose file (do not forget to create a `.env` file with the environment variables used in the docker compose file):
 
 ```yaml
 version: '3.5'
 services:
   keycloak:
     container_name: keycloak
-    image: easyglobalmarket/keycloak
+    image: easyglobalmarket/keycloak:23.0.3
     restart: always
     environment:
-      - KEYCLOAK_USER=${KEYCLOAK_USER}
-      - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}
-      - PROXY_ADDRESS_FORWARDING=true
-      - DB_VENDOR=postgres
-      - DB_ADDR=postgres
-      - DB_DATABASE=${KEYCLOAK_DB_DATABASE}
-      - DB_USER=${KEYCLOAK_DB_USER}
-      - DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
-      - KAFKA_BOOTSTRAP_SERVERS={realm_name}/{kafka_ip}:{kafka_port}
-      - KAFKA_KEY_SERIALIZER_CLASS=org.apache.kafka.common.serialization.StringSerializer
-      - KAFKA_VALUE_SERIALIZER_CLASS=org.apache.kafka.common.serialization.StringSerializer
-      - KAFKA_ACKS=all
-      - KAFKA_DELIVERY_TIMEOUT_MS=3000
-      - KAFKA_REQUEST_TIMEOUT_MS=2000
-      - KAFKA_LINGER_MS=1
-      - KAFKA_BATCH_SIZE=16384
-      - KAFKA_BUFFER_MEMORY=33554432
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KC_DB=postgres
+      - KC_DB_URL_HOST=postgres
+      - KC_DB_URL_DATABASE=${KEYCLOAK_DB_DATABASE}
+      - KC_DB_USERNAME=${KEYCLOAK_DB_USERNAME}
+      - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+      - KC_LOG_LEVEL=${LOG_LEVEL}
+      - KC_HOSTNAME=${KEYCLOAK_HOSTNAME}
+      - KC_PROXY=none
+      # https://www.keycloak.org/server/configuration-provider#_configuration_option_format
+      - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_KAFKA_BOOTSTRAP_SERVERS={realm_name}/{kafka_ip}:29092
+      - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_KAFKA_KEY_SERIALIZER_CLASS=org.apache.kafka.common.serialization.StringSerializer
+      - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_KAFKA_VALUE_SERIALIZER_CLASS=org.apache.kafka.common.serialization.StringSerializer
+      - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_KAFKA_ACKS=all
+      - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_KAFKA_DELIVERY_TIMEOUT_MS=3000
+      - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_KAFKA_REQUEST_TIMEOUT_MS=2000
+      - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_KAFKA_LINGER_MS=1
+      - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_KAFKA_BATCH_SIZE=16384
+      - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_KAFKA_MEMORY_BUFFER=33554432
+      - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_TENANTS={realm_name}/{tenant_name}
     ports:
-      - 9990:8080
+      # Using a different port than the ones used by Stellio to avoid conflicts when deployed on the same host
+      - 9080:8080
     depends_on:
       - postgres
+    command: "start-dev"
   postgres:
     container_name: postgres
-    image: postgres:12-alpine
+    image: postgres:14-alpine
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${KEYCLOAK_DB_DATABASE}
-      POSTGRES_USER: ${KEYCLOAK_DB_USER}
+      POSTGRES_USER: ${KEYCLOAK_DB_USERNAME}
       POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
 
 volumes:
@@ -71,17 +92,40 @@ volumes:
 where:
 
 - `realm_name` is the name of the realm to be created in the next section
-- `kafka_ip` and `kafka_port` is the address where the Stellio's Kafka instance is running
+- `tenant_name` is the name of the tenant in Stellio that the realm will be binded to (see the [multitenancy page](../user/multinenancy.md) for more details on this), set it to `urn:ngsi-ld:tenant:default` to use the default tenant.
+- `kafka_ip` is the IP address where the Stellio's Kafka instance is reachable (e.g., your laptop or VM IP)
 
-Please note that for a more secure deployment, it is recommended to setup a certficate based authentication between Keycloak and Kafka.
+The `.env` file contains the following environment variables:
+
+```
+KEYCLOAK_ADMIN=keycloak
+KEYCLOAK_ADMIN_PASSWORD=keycloakAdminPassword
+KEYCLOAK_DB_DATABASE=keycloak
+KEYCLOAK_DB_USERNAME=keycloak
+KEYCLOAK_DB_PASSWORD=keycloakDbPassword
+KEYCLOAK_HOSTNAME={keycloak_ip}
+LOG_LEVEL=INFO
+```
+
+Where `keycloak_ip` is the IP address where Keycloak is reachable outside the Docker network (e.g., your laptop or VM IP)
+
+Please note that for a production deployment, it is recommended to setup a certificate based authentication between Keycloak and Kafka and of course to only allow https connexions to Keycloak.
+
+### Start Keycloak
+
+```
+docker compose up -d
+```
 
 ### Create a realm
 
-Follow instructions on how to [create a new realm in Keycloak](https://www.keycloak.org/docs/latest/server_admin/index.html#_create-realm)
+- Go to http://{keycloak_ip}:9080
+- Authenticate to the administration console using the keycloak admin credentials defined in the docker compose configuration
+- Follow instructions on how to [create a new realm in Keycloak](https://www.keycloak.org/docs/latest/server_admin/index.html#proc-creating-a-realm_server_administration_guide)
 
 ### Create the builtin roles
 
-Stellio natively interprets two specific Realm roles that must first be created in Keycloak (see [procedure to create a role](https://www.keycloak.org/docs/latest/server_admin/index.html#realm-roles):
+Stellio natively interprets two specific Realm roles that must first be created in Keycloak (see [procedure to create a realm role](https://www.keycloak.org/docs/latest/server_admin/index.html#proc-creating-realm-roles_server_administration_guide)):
 
 - `stellio-creator`: it gives an user the right to create entities in the context broker
 - `stellio-admin`: it gives an user the administrator rights in the context broker
@@ -90,31 +134,53 @@ Stellio natively interprets two specific Realm roles that must first be created 
 
 ### Configure Keycloak event listener
 
-In the Keycloak admin console:
-
-- Select the realm that will be used by Stellio
-- Go to the Events section
-- Switch to the Config tab and add stellioEventListener in the list of events listeners.
+Go to the Realm settings > Events section and, in the Event listeners field, add `stellioEventListener`.
 
 ![](images/keycloak_events_configuration.png)
 
 ### Configure authentication in Stellio
 
-Finally, on Stellio side, configure the Keycloak URLs in entity, search and subscription services in Docker compose config.
+Finally, on Stellio side, activate authentication and configure the Keycloak URLs in search and subscription services in Docker compose config.
 
-For instance:
+In the `.env` file, update the following environment variables:
 
-```yaml
-  entity-service:
-    environment:
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI}
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI}
+```
+STELLIO_AUTHENTICATION_ENABLED=true
+
+APPLICATION_TENANTS_0_ISSUER=http://{keycloak_ip}:9080/realms/{realm_name}
 ```
 
-Values should look like:
+Then restart Stellio:
 
-- https://sso.yourcompany.com/auth/realms/{realm_name}
-- https://sso.yourcompany.com/auth/realms/{realm_name}/protocol/openid-connect/certs
+```
+docker compose up -d
+```
+
+### Validate the configuration
+
+To validate the configuration is fully working, you can create a client in Keycloak and then create an entity in Stellio using this client:
+
+- Create a client in Keycloak
+  - Activate client authentication
+  - Select the "Service accounts roles" authentication flow
+  - Do not set any redirect URIs
+- In the "Service account roles" tab, assign the `stellio-creator` realm role
+
+Then in a terminal:
+
+- Get a token for this client
+
+```shell
+export ACCESS_TOKEN=$(http --form POST http://192.168.64.1:9080/realms/stellio_auth/protocol/openid-connect/token client_id={client_id} client_secret={client_secret} grant_type=client_credentials | jq -r .access_token)
+```
+
+- Create a sample entity
+
+```shell
+echo -n '{ "id": "urn:ngsi-ld:Entity:01", "type": "Entity" }' | http POST http://localhost:8080/ngsi-ld/v1/entities Authorization:"Bearer $ACCESS_TOKEN"
+```
+
+If everything is correctly configured, you should get a `201 Created` response.
 
 ## Events raised by Keycloak
 
@@ -129,7 +195,7 @@ While creating and configuring users, groups and clients in Keycloak, the follow
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "entityTypes":["User"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\",\"type\":\"User\",\"username\":{\"type\":\"Property\",\"value\":\"user@mail.com\"},\"roles\":{\"type\":\"Property\",\"value\":\"stellio-creator\"}}",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
+  "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
 ```
 
@@ -142,7 +208,7 @@ While creating and configuring users, groups and clients in Keycloak, the follow
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "entityTypes":["Group"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\",\"type\":\"Group\",\"name\":{\"type\":\"Property\",\"value\":\"Group name\"}}",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
+  "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
 ```
 
@@ -155,7 +221,7 @@ While creating and configuring users, groups and clients in Keycloak, the follow
   "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
   "entityTypes":["Client"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj\",\"type\":\"Client\",\"clientId\":{\"type\":\"Property\",\"value\":\"client-id\"}}",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
+  "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
 ```
 
@@ -172,7 +238,7 @@ It is the identifier that is transmitted when a client does a direct request on 
   "attributeName":"serviceAccountId",
   "operationPayload":"{\"type\":\"Property\",\"value\":\"urn:ngsi-ld:User:jjjjjjjj-iiii-hhhh-gggg-ffffffffffff\"}",
   "updatedEntity":"",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
+  "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
 ```
 
@@ -189,7 +255,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
   "attributeName":"roles",
   "operationPayload":"{\"type\":\"Property\",\"value\":[\"stellio-creator\"]}",
   "updatedEntity":"",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
+  "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
 ```
 
@@ -205,7 +271,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
   "datasetId":"urn:ngsi-ld:Dataset:isMemberOf:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "operationPayload":"{\"type\":\"Relationship\",\"object\":\"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\",\"datasetId\":\"urn:ngsi-ld:Dataset:isMemberOf:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\"}",
   "updatedEntity":"",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
+  "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
 ```
 
@@ -220,7 +286,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
   "attributeName":"isMemberOf",
   "datasetId":"urn:ngsi-ld:Dataset:isMemberOf:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "updatedEntity":"",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
+  "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
 ```
 
@@ -235,7 +301,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
   "attributeName":"name",
   "operationPayload":"{\"type\":\"Property\",\"value\":\"New group name\"}",
   "updatedEntity":"",
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
+  "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
 ```
 
@@ -247,6 +313,6 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
   "tenantUri": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "entityTypes":["Group"],
-  "contexts":["https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.3.jsonld"]
+  "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
 ```
