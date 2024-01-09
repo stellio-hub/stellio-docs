@@ -165,13 +165,14 @@ To validate the configuration is fully working, you can create a client in Keycl
   - Select the "Service accounts roles" authentication flow
   - Do not set any redirect URIs
 - In the "Service account roles" tab, assign the `stellio-creator` realm role
+- In the "Credentials" tab, copy the client secret (you will need it to get an access token below)
 
 Then in a terminal:
 
-- Get a token for this client
+- Get an access token for this client
 
 ```shell
-export ACCESS_TOKEN=$(http --form POST http://192.168.64.1:9080/realms/stellio_auth/protocol/openid-connect/token client_id={client_id} client_secret={client_secret} grant_type=client_credentials | jq -r .access_token)
+export ACCESS_TOKEN=$(http --form POST http://{keycloak_ip}:9080/realms/{realm_name}/protocol/openid-connect/token client_id={client_id} client_secret={client_secret} grant_type=client_credentials | jq -r .access_token)
 ```
 
 - Create a sample entity
