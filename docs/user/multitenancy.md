@@ -4,7 +4,7 @@
 
 In Stellio, each tenant:
 
-* Is defined by an URI (as mandated by the NGSI-LD specification)
+* Is defined by a name (which can be any string since 1.7.1)
 * Maps to a specific schema in the database
 * Binds to a specific realm in Keycloak (if authentication is enabled)
 
@@ -22,15 +22,15 @@ When in development mode, tenants are defined in the `shared.properties` file in
 ```
 # each tenant maps to a different KC realm (if authentication is enabled) and DB schema
 # a tenant declaration is composed of a (tenant) URI, an OIDC issuer URL and a DB schema
-application.tenants[0].uri = urn:ngsi-ld:tenant:default
-application.tenants[0].issuer = https://sso.eglobalmark.com/auth/realms/stellio
+application.tenants[0].name = urn:ngsi-ld:tenant:default
+application.tenants[0].issuer = https://sso.stellio.io/auth/realms/stellio
 application.tenants[0].dbSchema = public
-application.tenants[1].uri = urn:ngsi-ld:tenant:stellio-dev
-application.tenants[1].issuer = https://sso.eglobalmark.com/auth/realms/stellio-dev
-application.tenants[1].dbSchema = stellio-dev
+application.tenants[1].name = urn:ngsi-ld:tenant:stellio-dev
+application.tenants[1].issuer = https://sso.stellio.io/auth/realms/egm
+application.tenants[1].dbSchema = egm
 ```
 
-Default tenant must always be declared with the `urn:ngsi-ld:tenant:default` URI (but, as specified by the NGSI-LD API specification, it does not have to be declared in the HTTP requests and is used if no tenant is specified in a request).
+Default tenant must always be declared with the `urn:ngsi-ld:tenant:default` value (but, as specified by the NGSI-LD API specification, it does not have to be declared in the HTTP requests and is used if no tenant is specified in a request).
 
 Please also note that, even if authentication is not enabled, you need to specify a value for the OIDC issuer URL property (it will be ignored if authentication is not enabled).
 
@@ -46,24 +46,24 @@ When running with the Docker images and using the docker-compose configuration, 
 ```yaml
   search-service:
     environment:
+      - APPLICATION_TENANTS_0_NAME=${APPLICATION_TENANTS_0_NAME}
       - APPLICATION_TENANTS_0_ISSUER=${APPLICATION_TENANTS_0_ISSUER}
-      - APPLICATION_TENANTS_0_URI=${APPLICATION_TENANTS_0_URI}
       - APPLICATION_TENANTS_0_DBSCHEMA=${APPLICATION_TENANTS_0_DBSCHEMA}
 ```
 
 Where the 3 environment variables are typically declared in the `.env` file:
 
 ```shell
-APPLICATION_TENANTS_0_ISSUER=https://sso.eglobalmark.com/auth/realms/stellio
-APPLICATION_TENANTS_0_URI=urn:ngsi-ld:tenant:default
+APPLICATION_TENANTS_0_NAME=urn:ngsi-ld:tenant:default
+APPLICATION_TENANTS_0_ISSUER=https://sso.stellio.io/auth/realms/stellio
 APPLICATION_TENANTS_0_DBSCHEMA=public
 ```
 
 If you want to add a new tenant, simply add the new properties in the `.env` file:
 
 ```shell
-APPLICATION_TENANTS_1_ISSUER=https://sso.eglobalmark.com/auth/realms/openiot
-APPLICATION_TENANTS_1_URI=urn:ngsi-ld:tenant:openiot
+APPLICATION_TENANTS_1_NAME=openiot
+APPLICATION_TENANTS_1_ISSUER=https://sso.stellio.io/auth/realms/openiot
 APPLICATION_TENANTS_1_DBSCHEMA=openiot
 ```
 
@@ -72,15 +72,15 @@ And add the declarations in the environment section of the search and subscripti
 ```yaml
   search-service:
     environment:
+      - APPLICATION_TENANTS_1_NAME=${APPLICATION_TENANTS_1_NAME}
       - APPLICATION_TENANTS_1_ISSUER=${APPLICATION_TENANTS_1_ISSUER}
-      - APPLICATION_TENANTS_1_URI=${APPLICATION_TENANTS_1_URI}
       - APPLICATION_TENANTS_1_DBSCHEMA=${APPLICATION_TENANTS_1_DBSCHEMA}
       - [Other environment variables]
 
   subscription-service:
     environment:
+      - APPLICATION_TENANTS_1_NAME=${APPLICATION_TENANTS_1_NAME}
       - APPLICATION_TENANTS_1_ISSUER=${APPLICATION_TENANTS_1_ISSUER}
-      - APPLICATION_TENANTS_1_URI=${APPLICATION_TENANTS_1_URI}
       - APPLICATION_TENANTS_1_DBSCHEMA=${APPLICATION_TENANTS_1_DBSCHEMA}
       - [Other environment variables]
 ```
