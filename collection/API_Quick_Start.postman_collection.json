@@ -1290,7 +1290,7 @@
 	"variable": [
 		{
 			"key": "apicContextLink",
-			"value": "<https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+			"value": "<https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
 		},
 		{
 			"key": "gatewayServer",

@@ -13,7 +13,7 @@ Export the link to the JSON-LD context used in this use case in an environment v
 the requests:
 
 ````shell
-export CONTEXT_LINK="<https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+export CONTEXT_LINK="<https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
 ````
 
 ## Starting the Stellio Context Broker
@@ -62,7 +62,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+
        "value":"Scalpa"
    },
    "@context":[
-      "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+      "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
    ]
 }
 '
@@ -89,7 +89,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+
       }
    },
    "@context":[
-      "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+      "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
    ]
 }
 '
@@ -106,7 +106,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+
          "value":"temperature"
    },
    "@context": [
-      "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+      "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
    ]
 }
 '
@@ -123,7 +123,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+
          "value":"humidity"
    },
    "@context": [
-      "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+      "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
    ]
 }
 '
@@ -174,7 +174,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entities Content-Type:application/ld+
       }
    },
    "@context": [
-      "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+      "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
    ]
 }
 '
@@ -207,7 +207,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entityOperations/create Content-Type:
             "value":"Scalpa"
         },
         "@context":[
-            "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+            "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
         ]
     },
     {
@@ -228,7 +228,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entityOperations/create Content-Type:
             }
         },
         "@context":[
-            "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+            "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
         ]
     },
     {
@@ -239,7 +239,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entityOperations/create Content-Type:
                 "value":"humidity"
         },
         "@context": [
-            "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+            "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
         ]
     },
     {
@@ -250,7 +250,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entityOperations/create Content-Type:
                 "value":"temperature"
         },
         "@context": [
-            "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+            "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
         ]
     },
     {
@@ -295,7 +295,7 @@ http POST http://localhost:8080/ngsi-ld/v1/entityOperations/create Content-Type:
             }
         },
         "@context": [
-            "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+            "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
         ]
     }
 ]
@@ -388,7 +388,7 @@ Sample payload returned showing a reduced version of the entity BeeHive:
         ]
     },
     "@context": [
-        "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+        "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
     ]
 }
 ```
@@ -496,7 +496,7 @@ Sample payload returned showing the temporal evolution of temperature and humidi
         }
     ],
     "@context": [
-        "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+        "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
     ]
 }
 ```
@@ -557,7 +557,7 @@ The sample payload returned showing the simplified temporal evolution of tempera
         ]
     },
     "@context": [
-        "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+        "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
     ]
 }
 ```
@@ -586,7 +586,7 @@ http POST http://localhost:8080/ngsi-ld/v1/subscriptions Content-Type:applicatio
     }
   },
   "@context": [
-     "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+     "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
   ]
 }
 '
@@ -623,7 +623,7 @@ Running the previous partial update [query](#partial-attributes-updates) (after 
                 "unitCode": "CEL"
             },
             "@context": [
-                "https://raw.githubusercontent.com/easy-global-market/ngsild-api-data-models/master/apic/jsonld-contexts/apic-compound.jsonld"
+                "https://easy-global-market.github.io/ngsild-api-data-models/apic/jsonld-contexts/apic-compound.jsonld"
             ]
         }
     ]
