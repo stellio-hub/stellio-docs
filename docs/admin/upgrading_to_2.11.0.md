@@ -14,6 +14,6 @@ In the same way, apply the same kind of renaming for the other tenants declared 
 
 As part of the release of the 2.11.0 version, Stellio switched the library used to do JSON-LD processing from [JSONLD-Java](https://github.com/jsonld-java/jsonld-java) to [Titanium](https://github.com/filip26/titanium-json-ld).
 
-The Titanium library does a strict checking of the JSON-LD specification and, in particular, it rejects JSON-LD contexts whose Content-Type is not `application/json` or a media type with a `+json` suffix (as described in https://www.w3.org/TR/json-ld11-api/#loaddocumentcallback).
+The Titanium library does a strict checking of the JSON-LD specification and, in particular, it rejects JSON-LD contexts whose Content-Type is not `application/json` or a media type with a `+json` suffix (as described in <https://www.w3.org/TR/json-ld11-api/#loaddocumentcallback>).
 
-Especially, if you are using JSON-LD contexts from the Smart Data Models initiative, ensure to use the version that is correctly served. For instance, instead of using https://raw.githubusercontent.com/smart-data-models/dataModel.Environment/master/context.jsonld, use the version hosted on GitHub pages: https://smart-data-models.github.io/dataModel.Environment/context.jsonld.
+Especially, if you are using JSON-LD contexts from the Smart Data Models initiative, ensure to use the version that is correctly served. For instance, instead of using <https://raw.githubusercontent.com/smart-data-models/dataModel.Environment/master/context.jsonld>, use the version hosted on GitHub pages: <https://smart-data-models.github.io/dataModel.Environment/context.jsonld>.
