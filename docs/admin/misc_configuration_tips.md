@@ -2,7 +2,7 @@
 
 ## Increase the max allowed size for headers
 
-If sending HTTP requests with headers having a large size, you may have to increate the max allowed size (which is by default set to 8KB).
+If sending HTTP requests with headers having a large size, you may have to increase the max allowed size (which is by default set to 8KB).
 
 It may be done by configuring the `server.max-http-request-header-size` property. It has to be done both in api-gateway and in search-service (because both are running an HTTP server).
 
@@ -18,6 +18,22 @@ If running Stellio in Kubernetes, it can be configured in the deployments:
 - name: SERVER_MAX_HTTP_REQUEST_HEADER_SIZE
   value: 512KB
 ```
+
+## Increase the default and maximum limit for pagination
+
+Stellio has a default pagination limit of 30 and a maximum of 100. 
+
+These values can be changed by configuring the `application.pagination.limit-default` and `application.pagination.limit-max` properties in `shared.properties` file.
+
+If running Stellio from `docker-compose`, it can be configured in the environment section of the root project : 
+
+```
+      - APPLICATION_PAGINATION_LIMIT_DEFAULT=30
+      - APPLICATION_PAGINATION_LIMIT_MAX=100
+```
+
+
+
 
 ## Change the log level of a library / namespace
 
