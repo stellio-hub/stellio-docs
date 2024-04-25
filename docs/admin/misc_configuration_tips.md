@@ -25,7 +25,7 @@ Stellio has a default pagination limit of 30 and a maximum of 100.
 
 These values can be changed by configuring the `application.pagination.limit-default` and `application.pagination.limit-max` properties in `shared.properties` file.
 
-If running Stellio from `docker-compose`, it can be configured in the environment section of the root project : 
+If running Stellio from `docker-compose`, it can be configured in the environment section of the target service (`search-service` or `subscription-service`) : 
 
 ```
       - APPLICATION_PAGINATION_LIMIT_DEFAULT=30
