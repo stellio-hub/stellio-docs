@@ -28,12 +28,9 @@ These values can be changed by configuring the `application.pagination.limit-def
 If running Stellio from `docker-compose`, it can be configured in the environment section of the target service (`search-service` or `subscription-service`) : 
 
 ```
-      - APPLICATION_PAGINATION_LIMIT_DEFAULT=30
-      - APPLICATION_PAGINATION_LIMIT_MAX=100
+      - APPLICATION_PAGINATION_LIMIT-DEFAULT=3O
+      - APPLICATION_PAGINATION_LIMIT-MAX=100
 ```
-
-
-
 
 ## Change the log level of a library / namespace
 
