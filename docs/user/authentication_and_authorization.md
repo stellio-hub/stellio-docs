@@ -3,7 +3,11 @@
 ## Pre-requisites
 
 For all the API operations described in this page, the [EGM's authorization context](https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld) has to be included in every operation.
-These operations respect the rules of the section 6.3.5 of the NGSI-LD specifications ("JSON-LD @context resolution"), with the exception that the [EGM's compound authorization context](https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld) is considered as the default context for all operations found here.
+These operations respect the rules of the section 6.3.5 of the NGSI-LD specification ("JSON-LD @context resolution"), with the exception that the [EGM's compound authorization context](https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld) is considered as the default context for all operations found here.
+
+## Terminology
+
+- `user`: an entity that is authenticated and can access Stellio. It can be a physical user or a client with a service account enabled.
 
 ## Specific access policy
 
