@@ -3,7 +3,11 @@
 ## Pre-requisites
 
 For all the API operations described in this page, the [EGM's authorization context](https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld) has to be included in every operation.
-These operations respect the rules of the section 6.3.5 of the NGSI-LD specifications ("JSON-LD @context resolution"), with the exception that the [EGM's compound authorization context](https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld) is considered as the default context for all operations found here.
+These operations respect the rules of the section 6.3.5 of the NGSI-LD specification ("JSON-LD @context resolution"), with the exception that the [EGM's compound authorization context](https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld) is considered as the default context for all operations found here.
+
+## Terminology
+
+- `user`: an entity that is authenticated and can access Stellio. It can be a physical user or a client with a service account enabled.
 
 ## Specific access policy
 
@@ -49,13 +53,13 @@ It is available under `/ngsi-ld/v1/entityAccessControl/entities` and can be call
 
 The following request parameters are supported: 
 
-* `attrs`: restrict returned entities to the ones with a specific right. Only `rCanRead`, `rCanWrite` and `rCanAdmin` are accepted. A list is accepted (e.g, `attrs=rCanRead,rCanWrite`). This request parameter has no effect when user has the _stellio-admin_ role
+* `attrs`: restrict returned entities to the ones with a specific right. Only `canRead`, `canWrite`, `canAdmin` and `isOwner` are accepted. A list is accepted (e.g, `attrs=canRead,canWrite`). This request parameter has no effect when user has the _stellio-admin_ role
 * `type`: restrict returned entities to given entity types
 * `id`: restrict returned entities to given ids (comma separated list of strings)
 
 There are several possible answers:
 
-* If user is not admin of the entity but it has a right on it (`rCanRead` or `rCanWrite`), the response body will be under this form:  
+* If user is not admin nor owner of the entity but it has a right on it (`canRead` or `canWrite`), the response body will be under this form:  
 
 ```JSON
 [
@@ -64,13 +68,13 @@ There are several possible answers:
         "type": "Entity",
         "right": { 
             "type": "Property", 
-            "value": "rCanWrite" 
+            "value": "canWrite" 
         }, 
         "specificAccessPolicy": { 
             "type": "Property", 
             "value": "AUTH_READ" 
         }, 
-        "@context": [ "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld" ] 
+        "@context": "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
     },
     {
         ...
@@ -78,7 +82,7 @@ There are several possible answers:
 ]
 ```
 
-* If user is admin of the entity or has the _stellio-admin_ role, the response body will be under this form: 
+* If user is admin or owner of the entity or has the _stellio-admin_ role, the response body will be under this form: 
 
 ```json
 [
@@ -87,13 +91,13 @@ There are several possible answers:
         "type": "Entity",
         "right": { 
             "type": "Property", 
-            "value": "rCanAdmin" 
+            "value": "canAdmin" 
         }, 
         "specificAccessPolicy": { 
             "type": "Property", 
             "value": "AUTH_READ" 
         }, 
-        "rCanRead": [  
+        "canRead": [  
             {  
                 "type": "Relationship",  
                 "object": "urn:ngsi-ld:User:2194588E-D3CE-47F9-B060-B77DB6EAAAD8",
@@ -131,13 +135,16 @@ There are several possible answers:
                 }
             } 
         ], 
-        "rCanWrite": [ 
+        "canWrite": [ 
             … 
         ], 
-        "rCanAdmin": [ 
+        "canAdmin": [ 
             … 
-        ], 
-        "@context": [ "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld" ] 
+        ],
+        "isOwner": {
+            // only if user is not the owner of the entity, in which case the value of the "right" property will be "isOwner"
+        }
+        "@context": "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
     },
     {
         ...
@@ -168,7 +175,7 @@ There are several possible answers:
             "type": "Property", 
             "value": "EGM" 
         }, 
-        "@context": [ "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld" ] 
+        "@context": "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
     }
 ]
 ```
@@ -188,7 +195,7 @@ There are several possible answers:
             "type": "Property", 
             "value": true
         },
-        "@context": [ "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld" ] 
+        "@context": "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
     }
 ]
 ```
@@ -230,7 +237,7 @@ It is available under `/ngsi-ld/v1/entityAccessControl/users` and can be called 
                 "city": "Nantes"
             }
         },
-        "@context": [ "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld" ]
+        "@context": "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
     }
 ]
 ```
@@ -241,7 +248,7 @@ The `subjectInfo` property is present only if other user attributes are known to
 
 ### Add rights on entities for a Stellio User
 
-This endpoint allows an user to give rights on entities it is admin of.
+This endpoint allows an user to give rights on entities it is admin or owner of.
 
 The rights will be given to another user or group. It is necessary to provide the `sub` of the target user or group (and not the pseudo entity id of an user or group).
 
@@ -251,7 +258,7 @@ The expected request body is a JSON object containing NGSI-LD Relationships:
 
 ```json
 {
-  "rCanRead": [ 
+  "canRead": [ 
     { 
       "type": "Relationship", 
       "object": "entityId1",
@@ -263,16 +270,16 @@ The expected request body is a JSON object containing NGSI-LD Relationships:
       "datasetId": "urn:ngsi-ld:Dataset:02"
     }
   ],
-  "rCanWrite": [
+  "canWrite": [
     …
   ],
-  "rCanAdmin": [
+  "canAdmin": [
     …
   ],
 }
 ```
 
-Only `rCanRead` and `rCanWrite` and `rCanAdmin` attributes are allowed by this operation.
+Only `canRead` and `canWrite` and `canAdmin` attributes are allowed by this operation.
 
 It returns:
 
@@ -281,9 +288,9 @@ It returns:
 
 ### Remove rights on an entity for a Stellio User
 
-This endpoint allows an user to remove rights of an user (or group) on an entity it is admin of.
+This endpoint allows an user to remove rights of an user (or group) on an entity it is admin or owner of.
 
-As when adding rights, the user or group whose the right is to be removed is identified by its `sub` (and not by the pseudo entity id of an user or group). It is necessary to provide the `entity_id` of the target entity.
+As when adding rights, the user or group whose the right is to be removed is identified by its `sub` (and not by the pseudo entity id of an user or group). It is necessary to provide the `entity_id` of the target entity. Removing the ownership of an user on an entity is not permitted.
 
 It is available under `/ngsi-ld/v1/entityAccessControl/{sub}/attrs/{entityId}` and can be called with a `DELETE` request.
 
