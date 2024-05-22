@@ -38,7 +38,7 @@ It will start all the services composing the Stellio context broker platform and
 -   Search service: 8083
 -   Subscription service: 8084
 
-Please note that the environment and scripts are validated on recent Ubuntu versions and MacOS. Some errors may occur on other platforms.
+Please note that the environment and scripts are validated on recent Debian/Ubuntu versions and MacOS. Some errors may occur on other platforms.
 
 Docker images are available on [Docker Hub](https://hub.docker.com/orgs/stellio/repositories).
 
