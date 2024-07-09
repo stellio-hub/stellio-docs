@@ -33,6 +33,16 @@ If running Stellio from `docker-compose`, it can be configured in the environmen
       - APPLICATION_PAGINATION_LIMIT-MAX=100
 ```
 
+### Temporal pagination
+There is also a default limit for temporal pagination set at 10 000.
+
+you can change it via `application.pagination.temporal-limit` in shared.properties.
+
+Or by adding the variable in the environment of the (`search-service`)
+```
+    - APPLICATION_PAGINATION_TEMPORAL-LIMIT=9999
+```
+
 ## Change the log level of a library / namespace
 
 Add a new environment for the target namespace. For instance, adding:
