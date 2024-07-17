@@ -38,7 +38,7 @@ There is also a default limit for temporal pagination set at 10 000.
 
 you can change it via `application.pagination.temporal-limit` in shared.properties.
 
-Or by adding the variable in the environment of the (`search-service`)
+Or by adding the variable in the environment target service  (`search-service`)
 ```
     - APPLICATION_PAGINATION_TEMPORAL-LIMIT=9999
 ```
