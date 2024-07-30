@@ -295,3 +295,10 @@ As when adding rights, the user or group whose the right is to be removed is ide
 It is available under `/ngsi-ld/v1/entityAccessControl/{sub}/attrs/{entityId}` and can be called with a `DELETE` request.
 
 It returns 204 if the operation succeeded.
+
+
+### Delete entities owned by Stellio User if said user is deleted
+
+Stellio allows the deletion of all entities owned by a user, if said user is deleted. 
+
+This feature is only active if `search.on-owner-delete-cascade-entities` is set to `true` in Search Service `application.properties`.
