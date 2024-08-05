@@ -75,7 +75,7 @@ including dots.
 - Recreate the neo4j container by running:
 
 ```shell
-docker-compose up -d
+docker compose up -d
 ```
 
 Note: Here we use the `docker-compose.yml` file of the `root` folder.
@@ -94,7 +94,7 @@ NEO4J_dbms_recovery_fail__on__missing__files=false
 and removing the `neostore.transaction.db.0` file under the new `stellio` folder and recreating the container by running:
 
 ```shell
-docker-compose up -d
+docker compose up -d
 ```
 
 In case you encounter any problem during the migration process, please do create an issue on

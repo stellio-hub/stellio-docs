@@ -29,7 +29,7 @@ A quick way to start using Stellio is to use the provided `docker-compose.yml` f
 (feel free to change the default passwords defined in the `.env` file):
 
 ```shell
-docker-compose up -d && docker-compose logs -f
+docker compose up -d && docker compose logs -f
 ```
 
 It will start all the services composing the Stellio context broker platform and expose them on the following ports:
@@ -55,7 +55,7 @@ To develop on a specific service, you can use the provided `docker-compose.yml` 
 instance:
 
 ```shell
-cd search-service docker-compose up -d && docker-compose logs -f
+cd search-service docker compose up -d && docker compose logs -f
 ```
 
 Then, from the root directory, launch the service:
