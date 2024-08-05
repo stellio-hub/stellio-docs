@@ -26,7 +26,7 @@ git clone https://github.com/stellio-hub/stellio-context-broker
 
 cd stellio-context-broker
 
-docker-compose -f docker-compose.yml up -d && docker-compose -f docker-compose.yml logs -f
+docker compose -f docker-compose.yml up -d && docker compose -f docker-compose.yml logs -f
 ```
 
 ## Case study
