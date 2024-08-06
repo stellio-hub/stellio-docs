@@ -214,15 +214,14 @@ DROP FUNCTION pg_temp.constraint_columns(regclass, int2[]);
 ```sh
 docker stop timescaledb-2.16.0
 docker container rm timescaledb-2.16.0
-docker compose up -d && docker compose logs -f --tail=100
 ```
 
 ### Upgrade to PostgreSQL 16
 
-* Stop the services (to avoid loss of data during the upgrade)
+* Start only PostgreSQL
 
 ```sh
-docker compose stop search-service subscription-service
+docker compose up -d postgres
 ```
 
 * Backup the search and subscription databases
@@ -272,16 +271,12 @@ gunzip /tmp/postgres_subscription.gz
 su - postgres
 psql stellio_search
 
-ALTER EXTENSION timescaledb UPDATE;
-
 SELECT timescaledb_pre_restore();
 \! pg_restore -Fc -d stellio_search /tmp/postgres_search
 SELECT timescaledb_post_restore();
 
 
 \c stellio_subscription
-
-ALTER EXTENSION timescaledb UPDATE;
 
 SELECT timescaledb_pre_restore();
 \! pg_restore -Fc -d stellio_subscription /tmp/postgres_subscription
