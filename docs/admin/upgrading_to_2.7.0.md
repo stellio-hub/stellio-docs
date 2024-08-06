@@ -22,11 +22,11 @@ The general upgrade procedure is described in the [Timescale documentation](http
 If using the `docker-compose` configuration provided in the Stellio repository, the upgrade can be done in this way (do not forget to do a backup of the database before starting the upgrade!):
 
 ```shell
-docker-compose stop
-docker-compose rm postgres
-docker-compose pull
-docker-compose up -d
+docker compose stop
+docker compose rm postgres
+docker compose pull
+docker compose up -d
 docker exec -it stellio-postgres psql --host=localhost -d stellio_search -U stellio -W -X -c "ALTER EXTENSION timescaledb UPDATE;"
 docker exec -it stellio-postgres psql --host=localhost -d stellio_subscription -U stellio -W -X -c "ALTER EXTENSION timescaledb UPDATE;"
-docker-compose restart stellio-postgres stellio-search-service stellio-subscription-service
+docker compose restart stellio-postgres stellio-search-service stellio-subscription-service
 ```
