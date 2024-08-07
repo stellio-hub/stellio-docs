@@ -285,7 +285,7 @@ SELECT timescaledb_post_restore();
 
 Exit the container and eventually remove the dumps.
 
-* Edit `docker-compose.yml` file, un-comment search and subscription services and restart the services:
+* Restart all the services
 
 ```sh
 docker compose up -d
