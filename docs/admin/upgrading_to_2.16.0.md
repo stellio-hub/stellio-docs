@@ -250,7 +250,7 @@ docker volume rm $PG_VOLUME_NAME
 docker compose up -d postgres
 ```
 
-Be sure to comment out search and subscription services (to avoid that they restart before the end of the migration) and to source any specific environment file.
+Be sure to source any specific environment file before restarting the DB.
 
 * Restore the backups made after the update of the Timescale extension
 
