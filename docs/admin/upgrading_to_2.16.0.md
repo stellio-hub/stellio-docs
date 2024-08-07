@@ -295,3 +295,11 @@ References:
 
 - [Upgrades within a Docker container](https://docs.timescale.com/self-hosted/latest/upgrades/upgrade-docker/)
 - [Upgrade PostgreSQL](https://docs.timescale.com/self-hosted/latest/upgrades/upgrade-pg/)
+
+## Upgrade to Confluent Kafka 7.16.0
+
+As Kraft mode is now the default mode in Kafka, the custom startup shell script is no longer necessary and should be removed.
+
+Also, Kafka now requires a `CLUSTER_ID` parameter to be set for each cluster. It can be generated using one the following commands shown in the following page: https://sleeplessbeastie.eu/2021/10/22/how-to-generate-kafka-cluster-id/.
+
+A sample updated Kafka configuration can be seen in the [`docker-compose.yml` file](https://github.com/stellio-hub/stellio-context-broker/blob/develop/docker-compose.yml) provided in the Stellio repository on GitHub.
