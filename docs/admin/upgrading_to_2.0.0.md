@@ -47,7 +47,7 @@ This first step must be done with the currently installed version (since it requ
 * Force a restart of neo4j
 
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
 * Copy the export script into the neo4j container
@@ -68,7 +68,7 @@ Backup PG and neo4j databases
 * Stop the Stellio and neo4j services
 
 ```
-docker-compose stop api-gateway entity-service search-service subscription-service neo4j
+docker compose stop api-gateway entity-service search-service subscription-service neo4j
 ```
 
 * Backup PG and neo4j databases
@@ -88,7 +88,7 @@ docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$neo4j_data_vol
 * Stop all the services
 
 ```
-docker-compose stop
+docker compose stop
 ```
 
 * Update the version of the Stellio containers in the `.env` file
@@ -111,8 +111,8 @@ docker volume rm -f $STELLIO_COMPOSE_DIR_postgres-storage
 * Download and start the services
 
 ```
-docker-compose pull
-docker-compose up -d && docker-compose logs -f
+docker compose pull
+docker compose up -d && docker compose logs -f
 ```
 
 * Copy the dumps into the PG container
@@ -163,7 +163,7 @@ git reset --hard
 * Start all the services
 
 ```
-docker-compose up -d --remove-orphans && docker-compose logs -f --tail=100
+docker-compose up -d --remove-orphans && docker compose logs -f --tail=100
 ```
 
 ### Import subjects infos into PG

@@ -64,7 +64,7 @@ export STELLIO_COMPOSE_DIR=$HOME/stellio-launcher
 
 ```shell
 cd $STELLIO_COMPOSE_DIR
-docker-compose up -d postgres
+docker compose up -d postgres
 
 docker cp $BACKUP_DIR/postgres_search_$backup_date.gz stellio-postgres:/tmp/.
 docker cp $BACKUP_DIR/postgres_subscription_$backup_date.gz stellio-postgres:/tmp/.
@@ -107,12 +107,12 @@ exit # from the container
 * Stop the Postgres container
 
 ```shell
-docker-compose stop postgres
+docker compose stop postgres
 ```
 
 ## Step 3 - Restart Stellio
 
 ```shell
 cd $STELLIO_COMPOSE_DIR
-docker-compose up -d && docker-compose logs -f --tail=100
+docker compose up -d && docker compose logs -f --tail=100
 ```
