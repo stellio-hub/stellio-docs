@@ -209,7 +209,7 @@ DROP FUNCTION pg_temp.constraint_columns(regclass, int2[]);
 
 * Update the PostgreSQL image name to `stellio/stellio-timescale-postgis:14-2.16.0-3.3` in docker-compose.yml
 
-* Stop the temporary Timescale container, restart the Stellio services and check in the logs that everything works fine
+* Stop and remove the temporary Timescale container
 
 ```sh
 docker stop timescaledb-2.16.0
@@ -285,12 +285,6 @@ SELECT timescaledb_post_restore();
 
 Exit the container and eventually remove the dumps.
 
-* Restart all the services
-
-```sh
-docker compose up -d
-```
-
 References:
 
 - [Upgrades within a Docker container](https://docs.timescale.com/self-hosted/latest/upgrades/upgrade-docker/)
@@ -303,3 +297,11 @@ As Kraft mode is now the default mode in Kafka, the custom startup shell script 
 Also, Kafka now requires a `CLUSTER_ID` parameter to be set for each cluster. It can be generated using one the following commands shown in the following page: https://sleeplessbeastie.eu/2021/10/22/how-to-generate-kafka-cluster-id/.
 
 A sample updated Kafka configuration can be seen in the [`docker-compose.yml` file](https://github.com/stellio-hub/stellio-context-broker/blob/develop/docker-compose.yml) provided in the Stellio repository on GitHub.
+
+## Restart all the services
+
+```sh
+docker compose -f pull
+docker compose -f up -d
+docker compose -f logs -f --tail=100
+```
