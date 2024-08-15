@@ -301,7 +301,7 @@ A sample updated Kafka configuration can be seen in the [`docker-compose.yml` fi
 ## Restart all the services
 
 ```sh
-docker compose -f pull
-docker compose -f up -d
-docker compose -f logs -f --tail=100
+docker compose pull
+docker compose up -d
+docker compose logs -f --tail=100
 ```
