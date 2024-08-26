@@ -39,23 +39,20 @@ The provided Docker image extends the official Keycloak Docker image to bundle i
 To start with, you can use this sample Docker compose file (do not forget to create a `.env` file with the environment variables used in the docker compose file):
 
 ```yaml
-version: '3.5'
 services:
   keycloak:
     container_name: keycloak
-    image: easyglobalmarket/keycloak:23.0.3
+    image: easyglobalmarket/keycloak:25.0.2
     restart: always
     environment:
       - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
       - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
-      - KC_DB=postgres
       - KC_DB_URL_HOST=postgres
       - KC_DB_URL_DATABASE=${KEYCLOAK_DB_DATABASE}
       - KC_DB_USERNAME=${KEYCLOAK_DB_USERNAME}
       - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
       - KC_LOG_LEVEL=${LOG_LEVEL}
       - KC_HOSTNAME=${KEYCLOAK_HOSTNAME}
-      - KC_PROXY=none
       # https://www.keycloak.org/server/configuration-provider#_configuration_option_format
       - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_KAFKA_BOOTSTRAP_SERVERS={realm_name}/{kafka_ip}:29092
       - KC_SPI_EVENTS_LISTENER_STELLIO_EVENT_LISTENER_KAFKA_KEY_SERIALIZER_CLASS=org.apache.kafka.common.serialization.StringSerializer
@@ -75,7 +72,7 @@ services:
     command: "start-dev"
   postgres:
     container_name: postgres
-    image: postgres:14-alpine
+    image: postgres:16-alpine
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -192,7 +189,7 @@ While creating and configuring users, groups and clients in Keycloak, the follow
 ```json
 {
   "operationType":"ENTITY_CREATE",
-  "tenantUri": "urn:ngsi-ld:tenant:stellio",
+  "tenantName": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "entityTypes":["User"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\",\"type\":\"User\",\"username\":{\"type\":\"Property\",\"value\":\"user@mail.com\"},\"roles\":{\"type\":\"Property\",\"value\":\"stellio-creator\"}}",
@@ -205,7 +202,7 @@ While creating and configuring users, groups and clients in Keycloak, the follow
 ```json
 {
   "operationType":"ENTITY_CREATE",
-  "tenantUri": "urn:ngsi-ld:tenant:stellio",
+  "tenantName": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "entityTypes":["Group"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\",\"type\":\"Group\",\"name\":{\"type\":\"Property\",\"value\":\"Group name\"}}",
@@ -218,27 +215,10 @@ While creating and configuring users, groups and clients in Keycloak, the follow
 ```json
 {
   "operationType":"ENTITY_CREATE",
-  "tenantUri": "urn:ngsi-ld:tenant:stellio",
+  "tenantName":"urn:ngsi-ld:tenant:default",
   "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
   "entityTypes":["Client"],
-  "operationPayload":"{\"id\":\"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj\",\"type\":\"Client\",\"clientId\":{\"type\":\"Property\",\"value\":\"client-id\"}}",
-  "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
-}
-```
-
-- Set the service account id of a client
-
-It is the identifier that is transmitted when a client does a direct request on the context broker (i.e., not on behalf of an user). It is automatically transmitted when realm roles are given to a client.
-
-```json
-{
-  "operationType":"ATTRIBUTE_APPEND",
-  "tenantUri": "urn:ngsi-ld:tenant:stellio",
-  "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
-  "entityTypes":["Client"],
-  "attributeName":"serviceAccountId",
-  "operationPayload":"{\"type\":\"Property\",\"value\":\"urn:ngsi-ld:User:jjjjjjjj-iiii-hhhh-gggg-ffffffffffff\"}",
-  "updatedEntity":"",
+  "operationPayload":"{\"id\":\"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj\",\"type\":\"Client\",\"clientId\":{\"type\":\"Property\",\"value\":\"test\"},\"internalClientId\":{\"type\":\"Property\",\"value\":\"gggggggg-hhhh-iiii-kkkkkkkkkk\"}}",
   "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
 ```
@@ -250,7 +230,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ATTRIBUTE_APPEND",
-  "tenantUri": "urn:ngsi-ld:tenant:stellio",
+  "tenantName": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
   "entityTypes":["Client"],
   "attributeName":"roles",
@@ -265,7 +245,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ATTRIBUTE_APPEND",
-  "tenantUri": "urn:ngsi-ld:tenant:stellio",
+  "tenantName": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "entityTypes":["User"],
   "attributeName":"isMemberOf",
@@ -281,7 +261,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ATTRIBUTE_DELETE",
-  "tenantUri": "urn:ngsi-ld:tenant:stellio",
+  "tenantName": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "entityTypes":["User"],
   "attributeName":"isMemberOf",
@@ -296,7 +276,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ATTRIBUTE_REPLACE",
-  "tenantUri": "urn:ngsi-ld:tenant:stellio",
+  "tenantName": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "entityTypes":["Group"],
   "attributeName":"name",
@@ -311,7 +291,7 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ENTITY_DELETE",
-  "tenantUri": "urn:ngsi-ld:tenant:stellio",
+  "tenantName": "urn:ngsi-ld:tenant:stellio",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "entityTypes":["Group"],
   "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
