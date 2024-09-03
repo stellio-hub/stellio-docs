@@ -2,7 +2,7 @@
 
 Stellio can be used with the [Keycloak](https://www.keycloak.org) IAM solution.
 
-This page presents a basic solution to show how to setup the integration between Stellio and Keycloak. **It is only meant for development purposes**.
+This page presents a basic solution to show how to setup the integration between Stellio and Keycloak. **It is only meant for development purposes, please refer to Keycloak documentation to set up a production deployment**.
 
 In the remainder of this page, it is considered that Stellio is running using the [docker-compose configuration](https://github.com/stellio-hub/stellio-context-broker/blob/develop/docker-compose.yml) provided on GitHub. Before starting this tutorial, ensure that the Stellio's Kafka broker is advertising its `PLAINTEXT_HOST` listener on an IP address that will be resolvable from the Keycloak container (running in its own docker network and not the same Docker network than Stellio), e.g.:
 
