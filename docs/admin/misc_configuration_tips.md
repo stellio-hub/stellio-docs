@@ -20,6 +20,19 @@ If running Stellio in Kubernetes, it can be configured in the deployments:
   value: 512KB
 ```
 
+## Increase the max allowed size for body
+
+If sending HTTP requests with a body having a large size, you may have to increase the max allowed size (which is by default set to 2Mb).
+
+It may be done by configuring the `search.payload-max-body-size` property. It has to be done in search-service.
+
+If running Stellio from `docker-compose`, it can be configured in the environment section of the service:
+
+```yaml
+    environment:
+      - SEARCH_PAYLOAD-MAX-BODY-SIZE=51200000
+```
+
 ## Increase the default and maximum limit for pagination
 
 Stellio has a default pagination limit of 30 and a maximum of 100. 
