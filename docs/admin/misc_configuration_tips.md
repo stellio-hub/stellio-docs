@@ -74,7 +74,7 @@ You can run a second instance of stellio with :
 ````shell
 docker compose --env-file .env --env-file csr.env -p csr-stellio up
 ````
-this will launch the instance using port :
+This will launch the instance using the following ports:
 - api-gateway: 8090
 - search-service: 8093
 - subscription-service: 8094
