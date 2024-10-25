@@ -69,7 +69,7 @@ If you want to add some specific JVM settings, you can do so by using the `JDK_J
 
 ## Launch a second instance of Stellio 
 
-The csr.env file contains all the configuration needed to run a second instance of stellio.
+The `csr.env` file contains all the configuration needed to run a second instance of Stellio.
 You can run a second instance of stellio with :
 ````shell
 docker compose --env-file .env --env-file csr.env -p csr-stellio up
