@@ -80,4 +80,4 @@ This will launch the instance using the following ports:
 - subscription-service: 8094
 - postgres: 5433
 - kafka: 29093
-You can change them by editing the csr.env variables.
+You can change them by editing the variables in the `csr.env` file.
