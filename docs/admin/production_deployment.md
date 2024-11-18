@@ -33,3 +33,22 @@ You call then call the `api-gateway` service at the following path: `/actuator/i
 ```
 
 Be aware that, once activated, this endpoint will be publicly accessible. If this is not what you want (and it should not be, for a production deployment), be sure to add access restriction to this endpoint (for instance, only allowing a monitoring infrastructure).
+
+
+## Launching Stellio with a different port binding
+
+The .context-source.env file contains all the necessary configuration to run Stellio with a different port binding.
+You can use it with:
+```shell
+docker compose --env-file .env --env-file .context-source.env -p stellio-context-source up
+```
+This will launch the instance using the following ports:
+- api-gateway: 8090
+- search-service: 8093
+- subscription-service: 8094
+- postgres: 5433
+- kafka: 29093
+  You can change them by editing the variables in the `.context-source.env` file.
+
+### Use case
+TThis can be utilized to launch a second instance of Stellio, enabling the creation of a Context Source.
