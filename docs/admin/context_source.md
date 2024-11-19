@@ -1,6 +1,6 @@
-## Launching a second instance of keycloak
+# Launch a second instance of Stellio
 
-The .context-source.env file contains all the necessary configurations required to run a second instance of stellio.
+The `.context-source.env` file contains the necessary configurations required to run a second instance of Stellio.
 You can use it with:
 ```shell
 docker compose --env-file .env --env-file .context-source.env -p stellio-context-source up

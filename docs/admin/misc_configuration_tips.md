@@ -67,8 +67,8 @@ If you want to add some specific JVM settings, you can do so by using the `JDK_J
       - JDK_JAVA_OPTIONS=-Xms1024m -Xmx2048m
 ```
 
-## Launching Stellio with a different port binding
-You can launch stellio with a different port binding using environment variables :
+## Launch Stellio with a different port binding
+You can launch Stellio with a different port binding using environment variables:
 
 - api-gateway: 
   - API_GATEWAY_PORT=8090
