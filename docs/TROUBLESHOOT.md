@@ -3,9 +3,9 @@
 
 ## Common NGSI-LD API mistakes 
 
-### Sending a single entity to a entityOperations endpoint
+### Sending a single entity to an entityOperations endpoint
 
-When calling an entityOperations endpoints, if you send a payload containing an entity you will have the following error : 
+When calling an entityOperations endpoints, if you send a payload containing a single entity you will have the following error : 
 ```json
 {
   "type": "https://uri.etsi.org/ngsi-ld/errors/InvalidRequest",
@@ -30,4 +30,4 @@ You can solve it by sending a list of one entity
 ### Other common mistakes
 
 We are looking to document other common mistakes.
-If you're aware of any, feel free to let us know or contribute at https://github.com/stellio-hub/stellio-docs
+If you're aware of any, feel free to let us know on https://github.com/stellio-hub/stellio-docs
