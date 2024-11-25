@@ -5,7 +5,7 @@
 
 ### Sending a single entity to an entityOperations endpoint
 
-When calling an entityOperations endpoints, if you send a payload containing a single entity you will have the following error : 
+When calling an entityOperations endpoint, if you send a payload containing a single entity you will have the following error: 
 ```json
 {
   "type": "https://uri.etsi.org/ngsi-ld/errors/InvalidRequest",
