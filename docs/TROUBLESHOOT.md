@@ -1,7 +1,7 @@
 # TROUBLESHOOT
 
 
-## Common Stellio API mistakes 
+## Common NGSI-LD API mistakes 
 
 ### Sending a single entity to a entityOperations endpoint
 
@@ -13,7 +13,7 @@
   "instance": "/ngsi-ld/v1/entityOperations/**"
 }
 ```
-The endpoint behind `/ngsi-ld/v1/entityOperations` only accepts a list of entities. 
+The endpoints behind `/ngsi-ld/v1/entityOperations` only accept a list of entities. 
 
 You can solve it by sending a list of one entity
 
