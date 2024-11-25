@@ -5,6 +5,7 @@
 
 ### Sending a single entity to a entityOperations endpoint
 
+When calling an entityOperations endpoints, if you send a payload containing an entity you will have the following error : 
 ```json
 {
   "type": "https://uri.etsi.org/ngsi-ld/errors/InvalidRequest",
@@ -13,7 +14,7 @@
   "instance": "/ngsi-ld/v1/entityOperations/**"
 }
 ```
-The endpoints behind `/ngsi-ld/v1/entityOperations` only accept a list of entities. 
+This is because the endpoints behind `/ngsi-ld/v1/entityOperations` only accept a list of entities. 
 
 You can solve it by sending a list of one entity
 
