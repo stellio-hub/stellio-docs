@@ -13,6 +13,7 @@ nav:
   - Home: index.md
   - Getting Started: 'quick_start_guide.md'
   - API Walkthrough: 'API_walkthrough.md'
+  - Troubleshoot: 'TROUBLESHOOT.md'
   - User & Programmers Manual:
       - Authentication and authorization: 'user/authentication_and_authorization.md'
       - Multitenancy: 'user/multitenancy.md'
@@ -24,6 +25,7 @@ nav:
       - Keycloak integration: 'admin/keycloak_integration.md'
       - Performance considerations and results: 'admin/performance.md'
       - Misc configuration tips: 'admin/misc_configuration_tips.md'
+      - Second instance: 'admin/second_instance.md'
       - Upgrading:
         - General notes: 'admin/upgrading_general_notes.md'
         - Upgrading to 0.7.0: 'admin/upgrading_to_0.7.0.md'

@@ -79,3 +79,19 @@ If you want to add some specific JVM settings, you can do so by using the `JDK_J
     environment:
       - JDK_JAVA_OPTIONS=-Xms1024m -Xmx2048m
 ```
+
+## Launch Stellio with a different port binding
+You can launch Stellio with a different port binding using environment variables:
+
+- api-gateway: 
+  - API_GATEWAY_PORT=8090
+- search-service: 
+  - SEARCH_SERVICE_PORT=8093
+  - SUBSCRIPTION_ENTITY_SERVICE_URL=http://search-service:8093
+- subscription-service: 
+  - SUBSCRIPTION_SERVICE_PORT=8094
+  - SUBSCRIPTION_STELLIO_URL=http://localhost:8090
+- postgres: 
+  - POSTGRES_PORT=5433
+- kafka:
+  - KAFKA_PORT=29093
