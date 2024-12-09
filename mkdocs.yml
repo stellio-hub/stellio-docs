@@ -13,7 +13,7 @@ nav:
   - Home: index.md
   - Getting Started: 'quick_start_guide.md'
   - API Walkthrough: 'API_walkthrough.md'
-  - TROUBLESHOOT: 'TROUBLESHOOT.md'
+  - Troubleshoot: 'TROUBLESHOOT.md'
   - User & Programmers Manual:
       - Authentication and authorization: 'user/authentication_and_authorization.md'
       - Multitenancy: 'user/multitenancy.md'
