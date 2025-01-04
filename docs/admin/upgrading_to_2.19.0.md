@@ -12,10 +12,7 @@ If using the `docker-compose` configuration provided in the Stellio repository, 
 
 ```shell
 docker compose pull
-docker compose stop
-docker compose rm stellio-postgres
 docker compose up -d
 docker exec -it stellio-postgres psql --host=localhost -d stellio_search -U stellio -W -X -c "ALTER EXTENSION timescaledb UPDATE;"
 docker exec -it stellio-postgres psql --host=localhost -d stellio_subscription -U stellio -W -X -c "ALTER EXTENSION timescaledb UPDATE;"
-docker compose restart stellio-postgres stellio-search-service stellio-subscription-service
 ```
