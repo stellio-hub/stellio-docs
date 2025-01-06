@@ -56,6 +56,7 @@ The following request parameters are supported:
 * `attrs`: restrict returned entities to the ones with a specific right. Only `canRead`, `canWrite`, `canAdmin` and `isOwner` are accepted. A list is accepted (e.g, `attrs=canRead,canWrite`). This request parameter has no effect when user has the _stellio-admin_ role
 * `type`: restrict returned entities to given entity types
 * `id`: restrict returned entities to given ids (comma separated list of strings)
+* `includeDeleted`: if `true`, the response will include entities that are deleted from the current state of the context broker but still exist in the temporal representation. It is false by default.
 
 There are several possible answers:
 
@@ -89,6 +90,12 @@ There are several possible answers:
     { 
         "id": "urn:ngsi-ld:Entity:01",
         "type": "Entity",
+        // the isDeleted property is present only if it is true.
+        // it is omitted if its value is false
+        "isDeleted": {
+            "type": "Property",
+            "value": true
+        },
         "right": { 
             "type": "Property", 
             "value": "canAdmin" 
