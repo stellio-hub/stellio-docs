@@ -20,21 +20,21 @@ It currently supports the following two values (more may be added in the future)
 - `read`: any authenticated user can read the entity
 - `write`: any authenticated user can update the entity (it of course implies the `read` right)
 
+## Endpoints for permission management
 
-# Endpoints for permission management
+Stellio exposes endpoints that help in managing permissions on entities (and soon on entities types and scopes) inside the context broker.
 
-Stellio exposes endpoints that help in managing permissions on entities inside the context broker.
-The base of this endpoints is the Permission EntityType
+The permissions are represented by a `Permission` data type.
 
+### Permission data type
 
-### New Permission type
- ```json
+```json
 {
   "id" : "urn:permission:uuid",
   "type" : "Permission",
   "target" : {
     "id" : "my:entity:id",
-    "type" : ["CompactedType1","CompactedType2"],
+    "type" : ["CompactedType1", "CompactedType2"],
     "scope" :  "my/scope"
   },
   "assignee" : "subjectID", 
@@ -43,28 +43,29 @@ The base of this endpoints is the Permission EntityType
   "@context": "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
 }
 ```
-The properties are based on odrl Permission class but does not respect the entire ODRL model.
 
-properties :
-- "id" : a unique identifier of the permission should be a URI
+The properties are based on ODRL Permission class but do not respect the entire ODRL model.
+
+The following properties are used:
+- "id" : a unique identifier of the permission (should be a URI)
 - "type" : should always be "Permission"
 - "target" :
-  - "id"     : id of the entity the permission give right to
+  - "id"     : id of the entity the permission gives right to
   - "type"   : not implemented yet
   - "scope"  : not implemented yet
 - "assignee" : id of the subject (group or user) getting the permission. If null the permission is considered to be for everyone
 - "assigner" : id of the creator
-- "action"   : can be "read", "write", "admin" and "own" ("own" is created by the broker at entity creation, you can't add, modify or deleter "own" permissions)
+- "action"   : can be "read", "write", "admin" and "own" ("own" is created by the broker at entity creation, you can't add, modify or delete "own" permissions)
 
-## Permission provisioning
-To be able to create, update or delete a permission you need to be administrator on the target entity of the permission.
+### Permission provision
 
-### Create a Permission
+To be able to create, update or delete a permission you need to be administrator of the target entity of the permission.
 
-Create a permission
+#### Create a permission
 
 -  POST /auth/permissions
- ```json
+
+```json
 {
   "id" : "urn:permission:my:id",
   "type" : "Permission",
@@ -77,26 +78,25 @@ Create a permission
 }
 ```
 
-### Update a permission
+#### Update a permission
 
 -  PATCH /auth/permissions/{id}
 
-Note modifying a permission will make you the new assigner of this permission. You can’t put someone else than you as an assigner.
+Note: modifying a permission will make you the new assigner of this permission. You can’t put someone else than you as an assigner.
 
-### Delete a permission
+#### Delete a permission
 
 -  DELETE /auth/permissions/{id}
 
-## Permission consumption
+### Permission consumption
 
 You can only access permissions that are assigned to you or permissions targeting entities you have at least admin right on
 
-
-### Retrieve a permission
+#### Retrieve a permission
 
 -  GET /auth/permissions/{id}
 
- ```json
+```json
 {
   "id" : "urn:permission:my:id",
   "type" : "Permission",
@@ -109,11 +109,11 @@ You can only access permissions that are assigned to you or permissions targetin
 }
 ```
 
-You can ask to retrieve the entity and the assignee information in the same request by specifying
-- details=true
+You can ask to retrieve the entity and the assignee information in the same request by adding `details=true` in the query parameters.
 
-The result will look like this :
-````json
+The result will look like this:
+
+```json
 {
   "action" : "read",
   "assignee" : {
@@ -132,36 +132,33 @@ The result will look like this :
     "@context" : "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
   }
 }
-````
+```
 
-### Query permissions
+#### Query permissions
 
 -  GET /auth/permissions
 
-Will return a list of Permission object
-
 You can filter the requested permissions with the following query parameters:
 
- - id=unr:id:1,urn:id:2 get the permissions targeting entities with id urn:id:1 and urn:id:2
+ - id=unr:id:1,urn:id:2 to get the permissions targeting entities with id urn:id:1 and urn:id:2
 
- - assignee=my:assignee get the permissions assigned to “my:assignee”
+ - assignee=my:assignee to get the permissions assigned to “my:assignee”
 
- - assigner=my:assigner get the permissions created by “my:assigner”
+ - assigner=my:assigner to get the permissions created by “my:assigner”
 
- - action=read get the permissions giving the right to read
+ - action=read to get the permissions giving the right to read
 
-You can ask to retrieve the entity and the assignee information in the same request by specifying
-- details=true
+You can ask to retrieve the entity and the assignee information in the same request by adding `details=true` in the query parameters.
 
-Other parameter :
+Other parameter:
  - sysAttrs=true  include createdAt and modifiedAt properties
 
-This endpoint support the usual pagination parameter they are functionally identical to the query entities operation :
+This endpoint supports the usual pagination parameters. They are functionally identical to the query entities operation :
  - count
  - limit
  - offset
 
-### Get groups the currently authenticated user belongs to 
+## Get groups the currently authenticated user belongs to 
 
 This endpoint allows an user to get the groups it belongs to.
 
@@ -209,7 +206,7 @@ The body also contains membership information.
 
 * If authentication is not enabled, a 204 (No content) response is returned. 
 
-### Get users
+## Get users
 
 This endpoint allows an user with `stellio-admin` role to get a list of all users
 
