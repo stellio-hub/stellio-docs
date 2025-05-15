@@ -119,15 +119,17 @@ The result will look like this :
   "assignee" : {
     "kind" : "Group",
     "name" : "Stellio Team"
-  }, 
+  },
   "assigner" : {
-    "kind" : "Group",
-    "name" : "Stellio Team"
+    "kind": "User",
+    "username": "JDupont",
+    "givenName": "Jeanne",
+    "familyName": "Dupont"
   }, 
   "target" : {
     "id" : "my:id",
     "type" : "https://ontology.eglobalmark.com/apic#BeeHive",
-    "@context" : "http://localhost:8093/jsonld-contexts/authorization-compound.jsonld"
+    "@context" : "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
   }
 }
 ````
@@ -140,7 +142,7 @@ Will return a list of Permission object
 
 You can filter the requested permissions with the following query parameters:
 
- - id=unr:id:1,urn:id:2 get the permissions targeting urn:id:1 and urn:id:2
+ - id=unr:id:1,urn:id:2 get the permissions targeting entities with id urn:id:1 and urn:id:2
 
  - assignee=my:assignee get the permissions assigned to “my:assignee”
 
@@ -152,26 +154,12 @@ You can ask to retrieve the entity and the assignee information in the same requ
 - details=true
 
 Other parameter :
- - includeDeleted=true 
  - sysAttrs=true  include createdAt and modifiedAt properties
 
 This endpoint support the usual pagination parameter they are functionally identical to the query entities operation :
  - count
  - limit
  - offset
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ### Get groups the currently authenticated user belongs to 
 
