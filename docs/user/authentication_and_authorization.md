@@ -61,6 +61,12 @@ The following properties are used:
 
 To be able to create, update or delete a permission you need to be administrator of the target entity of the permission.
 
+#### Special forbidden cases
+- assigning the "admin" action to everyone is forbidden (ie: assignee = null)
+- modifying or creating a permission with the "own" action is forbidden
+- creating a permission with the same assignee and target as an existing permission result in a conflict
+
+
 #### Create a permission
 
 -  POST /auth/permissions
@@ -110,6 +116,7 @@ You can only access permissions that are assigned to you or permissions targetin
 ```
 
 You can ask to retrieve the entity and the assignee information in the same request by adding `details=true` in the query parameters.
+In addition you can filter what property of the target entity you want to retrieve by adding `detailsPick=attr1`
 
 The result will look like this:
 
@@ -128,8 +135,11 @@ The result will look like this:
   }, 
   "target" : {
     "id" : "my:id",
-    "type" : "https://ontology.eglobalmark.com/apic#BeeHive",
-    "@context" : "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
+    "type" : "BeeHive",
+    "attr1": {
+      "type": "Property",
+      "value": "some value 1"
+    }
   }
 }
 ```
@@ -149,6 +159,7 @@ You can filter the requested permissions with the following query parameters:
  - action=read to get the permissions giving the right to read
 
 You can ask to retrieve the entity and the assignee information in the same request by adding `details=true` in the query parameters.
+In addition you can filter what property of the target entity you want to retrieve by adding `detailsPick=attr1`
 
 Other parameter:
  - sysAttrs=true  include createdAt and modifiedAt properties
