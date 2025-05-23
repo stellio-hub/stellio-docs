@@ -61,9 +61,9 @@ The following properties are used:
 
 To be able to create, update or delete a permission you need to be administrator of the target entity of the permission.
 
-#### Special forbidden cases
-- assigning the "admin" action to everyone is forbidden (ie: assignee = null)
+#### Special business rules
 - modifying or creating a permission with the "own" action is forbidden
+- assigning the "admin" action to everyone is forbidden (ie: assignee = null)
 - creating a permission with the same assignee and target as an existing permission result in a conflict
 
 
