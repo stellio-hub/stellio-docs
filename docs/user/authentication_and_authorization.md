@@ -173,7 +173,7 @@ This endpoint supports the usual pagination parameters. They are functionally id
 
 This endpoint allows an user to get the groups it belongs to.
 
-It is available under `/ngsi-ld/v1/entityAccessControl/groups` and can be called with a `GET` request.
+It is available under `/ngsi-ld/v1/auth/subjects/groups` and can be called with a `GET` request.
 
 There are several possible answers:
 
@@ -221,7 +221,7 @@ The body also contains membership information.
 
 This endpoint allows an user with `stellio-admin` role to get a list of all users
 
-It is available under `/ngsi-ld/v1/entityAccessControl/users` and can be called with a `GET` request.
+It is available under `/ngsi-ld/v1/auth/subjects/users` and can be called with a `GET` request.
 
 * If user is not _stellio-admin_, an error 403 is returned
 * If user is _stellio-admin_, all users are returned (`givenName` and `familyName` are optional fields that may not be part of the response):
