@@ -19,7 +19,7 @@ CALL add_columnstore_policy('attribute_instance', after => INTERVAL '30d');
 -- prevent potential "tuple decompression limit exceeded by operation" issue
 SET timescaledb.max_tuples_decompressed_per_dml_transaction = 1000000;
 ```
-
+The `after => INTERVAL '30d'` setting specifies that a chunk will be compressed after 30 days.
 See [timescale documentation](https://docs.tigerdata.com/api/latest/hypertable/) for more information on setting up the compression.
 
 ## Configure compression
@@ -124,16 +124,17 @@ The basic consumptions endpoints are not impacted by the temporal data compressi
 Compression as a really low impact on temporal data consumption.
 We have seen a 12-20 ms increased time for temporal get request when enabling temporal data compression.
 example of request impact :
- - get 100 entities with lastn=1 :  130ms -> 147ms (13%)
- - get 200 entities with lastn=1 :  201ms -> 214ms (6%)
- - get 100 entities with all data:  1030ms -> 1051ms (2%)
+ - get 100 entities with lastn=1 :  130ms → 147ms (13%)
+ - get 200 entities with lastn=1 :  201ms → 214ms (6%)
+ - get 100 entities with all data:  1030ms → 1051ms (2%)
 
-#### Creation (Post /temporal, Put,Patch,Post /entities)
-Compression of new data is done in a separate job running every 12h so the creation of new temporal data is not affected by compression.
-Special case: adding a new temporal instance with the same observedAt as an existing instance will update the instance instead of adding a new one.  
-In that case you will have performance impact as described below.
+#### Provision of recent data
+Data more recent than the interval specified in add_columnstore_policy is not compressed.
+This means that compression has no impact on inserting new values or modifying recent data.
 
-####  Modification of a tempor (Patch & Delete /temporal)
-Compression as a bigger impact when modifying already compressed data since the modified chunks as to be recompressed.
-example of request impact :
- - update a temporal instance :  23ms -> 207ms
+####  Provision and modification of old data
+If you insert or modify data within a compressed chunk (i.e., older data), you may experience performance impacts on your requests.
+The impact depends directly on the size of the chunk being modified.
+Example of request impact on a large chunk:
+ - Updating a temporal instance: 23 ms → 207 ms
+
