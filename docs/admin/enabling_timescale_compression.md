@@ -1,10 +1,10 @@
 # Temporal data compression
 
-**Warning: it only works with Timescale 2.18 or above (or stellio/stellio-timescale-postgis:16-2.20 or above, which will be default version starting from Stellio 2.24.0)**
+**Warning: it only works with TimescaleDB 2.18 or above (or stellio/stellio-timescale-postgis:16-2.20 or above, which will be default version starting from Stellio 2.24.0)**
 
-## Enabling compression
+## Enable compression
 
-You can enable timescale compression on temporal instances by running:
+You can enable TimescaleDB compression on temporal instances by running:
 
 ```sql
 -- enable column store
@@ -16,11 +16,12 @@ ALTER TABLE attribute_instance SET(
 
 -- add compression policy
 CALL add_columnstore_policy('attribute_instance', after => INTERVAL '30d');
+
 -- prevent potential "tuple decompression limit exceeded by operation" issue
 SET timescaledb.max_tuples_decompressed_per_dml_transaction = 1000000;
 ```
 The `after => INTERVAL '30d'` setting specifies that a chunk will be compressed after 30 days.
-See [timescale documentation](https://docs.tigerdata.com/api/latest/hypertable/) for more information on setting up the compression.
+See [TimescaleDB documentation](https://docs.tigerdata.com/api/latest/hypertable/) for more information on setting up the compression.
 
 ## Configure compression
 
@@ -32,19 +33,20 @@ Enabling compression creates a job that compresses data every 12h. You can find 
 -- get all compression jobs on attribute_instance
 SELECT * FROM timescaledb_information.jobs
 WHERE proc_name = 'policy_compression'
-AND hypertable_name='attribute_instance';
+AND hypertable_name = 'attribute_instance';
 ```
 
 You can also change the scheduled interval with:
 
 ```sql
--- change execution to once a day 
-SELECT alter_job(1000,schedule_interval=>'24 hours'::interval); -- replace 1000 by your job id if different
+-- change execution to once a day
+-- replace 1000 by your job id if different
+SELECT alter_job(1000, schedule_interval=>'24 hours'::interval);
 ```
 
 ### Configure the chunk
 
-Timescale compression work with chunks, a chunk is a part of the table that is compressed. 
+TimescaleDB compression works with chunks, a chunk is a part of the table that is compressed.
 By default a chunk contains 7 days of data, which is optimal for data points every hour to every 10 minutes. 
 Increasing the chunk time interval will reduce the size of your data but will impact request performance (see [choosing the right chunk interval](https://docs.timescale.com/use-timescale/latest/hypertables/#best-practices-for-time-partitioning)).
 
@@ -64,7 +66,7 @@ You can find other ideas for troubleshooting [here](https://docs.timescale.com/u
 
 ## Compression statistics
 
-If you want to see the statistics of your compression you can do:
+You can see the statistics of your compression with the following command:
 
 ```sql
 SELECT * FROM hypertable_compression_stats('attribute_instance');
@@ -72,7 +74,7 @@ SELECT * FROM hypertable_compression_stats('attribute_instance');
 
 ## Disable compression
 
-You can also disable compression rule by adding:
+You can disable compression rule by calling:
 
 ```sql
 CALL remove_columnstore_policy('attribute_instance');
@@ -113,28 +115,33 @@ CALL merge_chunks('_timescaledb_internal._hyper_2_1_chunk', '_timescaledb_intern
 
 ### Data storage
 
-Enabling timescale compression can help reduce the size taken by the temporal instances by up to 80% for huge chunk size.
+Enabling TimescaleDB compression can help reduce the size taken by the temporal instances by up to 80% for huge chunk size.
 
 ### Endpoint response time 
 
 #### Basic consumption (GET /entities)
+
 The basic consumptions endpoints are not impacted by the temporal data compression.
 
-#### Temporal Consumption (Get /temporal)
-Compression as a really low impact on temporal data consumption.
-We have seen a 12-20 ms increased time for temporal get request when enabling temporal data compression.
-example of request impact :
- - get 100 entities with lastn=1 :  130ms → 147ms (13%)
- - get 200 entities with lastn=1 :  201ms → 214ms (6%)
+#### Temporal Consumption (GET /temporal)
+
+Compression has a really low impact on temporal data consumption.
+We have noticed a 12-20 ms increased time for temporal consumption requests when enabling temporal data compression.
+
+Example of request impact :
+ - get 100 entities with lastN=1 :  130ms → 147ms (13%)
+ - get 200 entities with lastN=1 :  201ms → 214ms (6%)
  - get 100 entities with all data:  1030ms → 1051ms (2%)
 
 #### Provision of recent data
+
 Data more recent than the interval specified in add_columnstore_policy is not compressed.
 This means that compression has no impact on inserting new values or modifying recent data.
 
 ####  Provision and modification of old data
+
 If you insert or modify data within a compressed chunk (i.e., older data), you may experience performance impacts on your requests.
 The impact depends directly on the size of the chunk being modified.
+
 Example of request impact on a large chunk:
  - Updating a temporal instance: 23 ms → 207 ms
-
