@@ -1,6 +1,6 @@
 # Temporal data compression
 
-**Warning: it only works with TimescaleDB 2.18 or above (or stellio/stellio-timescale-postgis:16-2.20 or above, which will be default version starting from Stellio 2.24.0)**
+**Warning: it only works with TimescaleDB 2.18 or above (or stellio/stellio-timescale-postgis:16-2.20.2-3.5 or above, which will be default version starting from Stellio 2.24.0)**
 
 ## Enable compression
 
