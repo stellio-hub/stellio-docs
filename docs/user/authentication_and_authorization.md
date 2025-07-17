@@ -144,7 +144,7 @@ The result will look like this:
 }
 ```
 
-#### Query the permissions that you administer
+#### Query the permissions that you can administer
 
 -  GET /auth/permissions
 -  GET /auth/permissions/admin
@@ -176,7 +176,7 @@ This endpoint supports the usual pagination parameters. They are functionally id
 
 -  GET /auth/permissions/assigned
 
-This endpoint support the same parameters as the previous endpoint (GET /auth/permissions).
+This endpoint supports the same parameters as the previous endpoint (GET /auth/permissions).
 
 ## Get groups the currently authenticated user belongs to 
 
