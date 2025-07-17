@@ -147,7 +147,6 @@ The result will look like this:
 #### Query the permissions that you can administer
 
 -  GET /auth/permissions
--  GET /auth/permissions/admin
 
 You can filter the requested permissions with the following query parameters:
 
