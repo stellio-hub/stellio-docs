@@ -144,7 +144,7 @@ The result will look like this:
 }
 ```
 
-#### Query permissions
+#### Query the permissions that you can administer
 
 -  GET /auth/permissions
 
@@ -158,6 +158,8 @@ You can filter the requested permissions with the following query parameters:
 
  - action=read to get the permissions giving the right to read
 
+ - type=MyType to get the permissions targeting entities matching the corresponding type (note: the field support complex entity type selection as defined in section 4.17 of the specification)
+
 You can ask to retrieve the entity and the assignee information in the same request by adding `details=true` in the query parameters.
 In addition you can filter what property of the target entity you want to retrieve by adding `detailsPick=attr1`
 
@@ -168,6 +170,12 @@ This endpoint supports the usual pagination parameters. They are functionally id
  - count
  - limit
  - offset
+
+#### Query the permissions assigned to you
+
+-  GET /auth/permissions/assigned
+
+This endpoint supports the same parameters as the previous endpoint (GET /auth/permissions).
 
 ## Get groups the currently authenticated user belongs to 
 
