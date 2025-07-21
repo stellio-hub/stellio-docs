@@ -95,6 +95,7 @@ Note: modifying a permission will make you the new assigner of this permission. 
 -  DELETE /auth/permissions/{id}
 
 ### Permission consumption
+### Permission consumption
 
 You can only access permissions that are assigned to you or permissions targeting entities you have at least admin right on
 
@@ -150,7 +151,7 @@ The result will look like this:
 
 You can filter the requested permissions with the following query parameters:
 
- - id=unr:id:1,urn:id:2 to get the permissions targeting entities with id urn:id:1 and urn:id:2
+ - targetId=unr:id:1,urn:id:2 to get the permissions targeting entities with id urn:id:1 and urn:id:2
 
  - assignee=my:assignee to get the permissions assigned to “my:assignee”
 
@@ -158,7 +159,7 @@ You can filter the requested permissions with the following query parameters:
 
  - action=read to get the permissions giving the right to read
 
- - type=MyType to get the permissions targeting entities matching the corresponding type (note: the field support complex entity type selection as defined in section 4.17 of the specification)
+ - targetType=MyType to get the permissions targeting entities matching the corresponding type (note: the field support complex entity type selection as defined in section 4.17 of the specification)
 
 You can ask to retrieve the entity and the assignee information in the same request by adding `details=true` in the query parameters.
 In addition you can filter what property of the target entity you want to retrieve by adding `detailsPick=attr1`
