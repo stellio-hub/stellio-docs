@@ -95,7 +95,6 @@ Note: modifying a permission will make you the new assigner of this permission. 
 -  DELETE /auth/permissions/{id}
 
 ### Permission consumption
-### Permission consumption
 
 You can only access permissions that are assigned to you or permissions targeting entities you have at least admin right on
 
@@ -125,15 +124,19 @@ The result will look like this:
 {
   "action" : "read",
   "assignee" : {
-    "kind" : "Group",
-    "name" : "Stellio Team"
+    "subjectId":"55e64faf-4bda-41cc-98b0-195874cefd29",
+    "subjectType":"GROUP",
+    "subjectInfo":{"name":"Stellio Team"}
   },
   "assigner" : {
-    "kind": "User",
-    "username": "JDupont",
-    "givenName": "Jeanne",
-    "familyName": "Dupont"
-  }, 
+    "subjectId":"91e64bcf-c6da-zt1d-ar70-164f74ce5d75",
+    "subjectType":"USER",
+    "subjectInfo": {
+      "username": "jeanne@dupont.io",
+      "givenName": "Jeanne",
+      "familyName": "Dupont"
+    }
+  },
   "target" : {
     "id" : "my:id",
     "type" : "BeeHive",
