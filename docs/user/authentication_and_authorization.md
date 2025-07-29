@@ -13,161 +13,179 @@ These operations respect the rules of the section 6.3.5 of the NGSI-LD specifica
 
 Stellio supports providing a specific property, called `specificAccessPolicy`, to allow any authenticated user to read or update an entity.
 
-This property can be set at entity creation time and it can later be updated by any user who has admin rights on the entity. In case an unauthorized user tries to modify it, a 403 HTTP error is returned.
+This property can be set at entity creation time.
 
 It currently supports the following two values (more may be added in the future):
 
-- `AUTH_READ`: any authenticated user can read the entity
-- `AUTH_WRITE`: any authenticated user can update the entity (it of course implies the `AUTH_READ` right)
+- `read`: any authenticated user can read the entity
+- `write`: any authenticated user can update the entity (it of course implies the `read` right)
 
-### Update the specific access policy of an entity
+## Endpoints for permission management
 
-This endpoint allows an user to update the specific access policy set on a entity.
+Stellio exposes endpoints that help in managing permissions on entities (and soon on entities types and scopes) inside the context broker.
 
-It is available under `/ngsi-ld/v1/entityAccessControl/{entityId}/attrs/specificAccessPolicy` and can be called with a `POST` request.
+The permissions are represented by a `Permission` data type.
 
-The expected request body is an NGSI-LD Attribute Fragment:
+### Permission data type
 
-```JSON
+```json
 {
-    "type": "Property",
-    "value": "AUTH_READ"
+  "id" : "urn:permission:uuid",
+  "type" : "Permission",
+  "target" : {
+    "id" : "my:entity:id",
+    "type" : ["CompactedType1", "CompactedType2"],
+    "scope" :  "my/scope"
+  },
+  "assignee" : "subjectID", 
+  "assigner": "subjectID",
+  "action":  "write",
+  "@context": "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
 }
 ```
 
-### Remove the specific access policy from an entity
+The properties are based on ODRL Permission class but do not respect the entire ODRL model.
 
-This endpoint allows an user to remove the specific access policy set on a entity.
+The following properties are used:
+- "id" : a unique identifier of the permission (should be a URI)
+- "type" : should always be "Permission"
+- "target" :
+  - "id"     : id of the entity the permission gives right to
+  - "type"   : not implemented yet
+  - "scope"  : not implemented yet
+- "assignee" : id of the subject (group or user) getting the permission. If null the permission is considered to be for everyone
+- "assigner" : id of the creator
+- "action"   : can be "read", "write", "admin" and "own" ("own" is created by the broker at entity creation, you can't add, modify or delete "own" permissions)
 
-It is available under `/ngsi-ld/v1/entityAccessControl/{entityId}/attrs/specificAccessPolicy` and can be called with a `DELETE` request.
+### Permission provision
 
-## Endpoints for rights management
+To be able to create, update or delete a permission you need to be administrator of the target entity of the permission.
 
-Stellio exposes endpoints that help in managing rights on entities inside the context broker.
+#### Special business rules
+- modifying or creating a permission with the "own" action is forbidden
+- assigning the "admin" action to everyone is forbidden (ie: assignee = null)
+- creating a permission with the same assignee and target as an existing permission result in a conflict
 
-### Get authorized entites for the currently authenticated user 
 
-This endpoint allows an user to get the rights it has on entities.
+#### Create a permission
 
-It is available under `/ngsi-ld/v1/entityAccessControl/entities` and can be called with a `GET` request.
-
-The following request parameters are supported: 
-
-* `attrs`: restrict returned entities to the ones with a specific right. Only `canRead`, `canWrite`, `canAdmin` and `isOwner` are accepted. A list is accepted (e.g, `attrs=canRead,canWrite`). This request parameter has no effect when user has the _stellio-admin_ role
-* `type`: restrict returned entities to given entity types
-* `id`: restrict returned entities to given ids (comma separated list of strings)
-* `includeDeleted`: if `true`, the response will include entities that are deleted from the current state of the context broker but still exist in the temporal representation. It is false by default.
-
-There are several possible answers:
-
-* If user is not admin nor owner of the entity but it has a right on it (`canRead` or `canWrite`), the response body will be under this form:  
-
-```JSON
-[
-    { 
-        "id": "urn:ngsi-ld:Entity:01",
-        "type": "Entity",
-        "right": { 
-            "type": "Property", 
-            "value": "canWrite" 
-        }, 
-        "specificAccessPolicy": { 
-            "type": "Property", 
-            "value": "AUTH_READ" 
-        }, 
-        "@context": "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
-    },
-    {
-        ...
-    }
-]
-```
-
-* If user is admin or owner of the entity or has the _stellio-admin_ role, the response body will be under this form: 
+-  POST /auth/permissions
 
 ```json
-[
-    { 
-        "id": "urn:ngsi-ld:Entity:01",
-        "type": "Entity",
-        // the isDeleted property is present only if it is true.
-        // it is omitted if its value is false
-        "isDeleted": {
-            "type": "Property",
-            "value": true
-        },
-        "right": { 
-            "type": "Property", 
-            "value": "canAdmin" 
-        }, 
-        "specificAccessPolicy": { 
-            "type": "Property", 
-            "value": "AUTH_READ" 
-        }, 
-        "canRead": [  
-            {  
-                "type": "Relationship",  
-                "object": "urn:ngsi-ld:User:2194588E-D3CE-47F9-B060-B77DB6EAAAD8",
-                "datasetId": "urn:ngsi-ld:Dataset:2194588E-D3CE-47F9-B060-B77DB6EAAAD8",
-                "subjectInfo": {
-                    "type": "Property",
-                    "value": {
-                        "kind": "User",
-                        "username": "stellio-user"
-                    }
-                }
-            }, 
-            {  
-                "type": "Relationship",
-                "object": "urn:ngsi-ld:Client:D7A09461-4FD1-4B96-A15E-1DCABD11FE04",
-                "datasetId": "urn:ngsi-ld:Dataset:D7A09461-4FD1-4B96-A15E-1DCABD11FE04",
-                "subjectInfo": {
-                    "type": "Property",
-                    "value": {
-                        "kind": "Client",
-                        "clientId": "client-id"
-                    }
-                }
-            }, 
-            {  
-                "type": "Relationship",  
-                "object": "urn:ngsi-ld:Group:5AD29EF5-5427-46DA-9573-7CA03F842701",
-                "datasetId": "urn:ngsi-ld:Dataset:5AD29EF5-5427-46DA-9573-7CA03F842701",
-                "subjectInfo": {
-                    "type": "Property",
-                    "value": {
-                        "kind": "Group",
-                        "name": "Stellio Team"
-                    }
-                }
-            } 
-        ], 
-        "canWrite": [ 
-            … 
-        ], 
-        "canAdmin": [ 
-            … 
-        ],
-        "isOwner": {
-            // only if user is not the owner of the entity, in which case the value of the "right" property will be "isOwner"
-        }
-        "@context": "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
-    },
-    {
-        ...
-    }
-]
+{
+  "id" : "urn:permission:my:id",
+  "type" : "Permission",
+  "target" : {
+    "id" : "my:entity:id"
+  },
+  "assignee" : "subjectID", 
+  "action":  "write",
+  "@context": "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
+}
 ```
 
-The body also contains the other users who have a right on the entity.
+#### Update a permission
 
-* If authentication is not enabled, a 204 (No content) response is returned. 
+-  PATCH /auth/permissions/{id}
 
-### Get groups the currently authenticated user belongs to 
+Note: modifying a permission will make you the new assigner of this permission. You can’t put someone else than you as an assigner.
+
+#### Delete a permission
+
+-  DELETE /auth/permissions/{id}
+
+### Permission consumption
+
+You can only access permissions that are assigned to you or permissions targeting entities you have at least admin right on
+
+#### Retrieve a permission
+
+-  GET /auth/permissions/{id}
+
+```json
+{
+  "id" : "urn:permission:my:id",
+  "type" : "Permission",
+  "target" : {
+    "id" : "my:entity:id"
+  },
+  "assignee" : "subjectID", 
+  "action":  "write",
+  "@context": "https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization-compound.jsonld"
+}
+```
+
+You can ask to retrieve the entity and the assignee information in the same request by adding `details=true` in the query parameters.
+In addition you can filter what property of the target entity you want to retrieve by adding `detailsPick=attr1`
+
+The result will look like this:
+
+```json
+{
+  "action" : "read",
+  "assignee" : {
+    "subjectId":"55e64faf-4bda-41cc-98b0-195874cefd29",
+    "subjectType":"GROUP",
+    "subjectInfo":{"name":"Stellio Team"}
+  },
+  "assigner" : {
+    "subjectId":"91e64bcf-c6da-zt1d-ar70-164f74ce5d75",
+    "subjectType":"USER",
+    "subjectInfo": {
+      "username": "jeanne@dupont.io",
+      "givenName": "Jeanne",
+      "familyName": "Dupont"
+    }
+  },
+  "target" : {
+    "id" : "my:id",
+    "type" : "BeeHive",
+    "attr1": {
+      "type": "Property",
+      "value": "some value 1"
+    }
+  }
+}
+```
+
+#### Query the permissions that you can administer
+
+-  GET /auth/permissions
+
+You can filter the requested permissions with the following query parameters:
+
+ - targetId=unr:id:1,urn:id:2 to get the permissions targeting entities with id urn:id:1 and urn:id:2
+
+ - assignee=my:assignee to get the permissions assigned to “my:assignee”
+
+ - assigner=my:assigner to get the permissions created by “my:assigner”
+
+ - action=read to get the permissions giving the right to read
+
+ - targetType=MyType to get the permissions targeting entities matching the corresponding type (note: the field support complex entity type selection as defined in section 4.17 of the specification)
+
+You can ask to retrieve the entity and the assignee information in the same request by adding `details=true` in the query parameters.
+In addition you can filter what property of the target entity you want to retrieve by adding `detailsPick=attr1`
+
+Other parameter:
+ - sysAttrs=true  include createdAt and modifiedAt properties
+
+This endpoint supports the usual pagination parameters. They are functionally identical to the query entities operation :
+ - count
+ - limit
+ - offset
+
+#### Query the permissions assigned to you
+
+-  GET /auth/permissions/assigned
+
+This endpoint supports the same parameters as the previous endpoint (GET /auth/permissions).
+
+## Get groups the currently authenticated user belongs to 
 
 This endpoint allows an user to get the groups it belongs to.
 
-It is available under `/ngsi-ld/v1/entityAccessControl/groups` and can be called with a `GET` request.
+It is available under `/ngsi-ld/v1/auth/subjects/groups` and can be called with a `GET` request.
 
 There are several possible answers:
 
@@ -211,11 +229,11 @@ The body also contains membership information.
 
 * If authentication is not enabled, a 204 (No content) response is returned. 
 
-### Get users
+## Get users
 
 This endpoint allows an user with `stellio-admin` role to get a list of all users
 
-It is available under `/ngsi-ld/v1/entityAccessControl/users` and can be called with a `GET` request.
+It is available under `/ngsi-ld/v1/auth/subjects/users` and can be called with a `GET` request.
 
 * If user is not _stellio-admin_, an error 403 is returned
 * If user is _stellio-admin_, all users are returned (`givenName` and `familyName` are optional fields that may not be part of the response):
@@ -252,57 +270,6 @@ It is available under `/ngsi-ld/v1/entityAccessControl/users` and can be called 
 The `subjectInfo` property is present only if other user attributes are known to the system.
 
 * If authentication is not enabled, a 204 (No content) response is returned.
-
-### Add rights on entities for a Stellio User
-
-This endpoint allows an user to give rights on entities it is admin or owner of.
-
-The rights will be given to another user or group. It is necessary to provide the `sub` of the target user or group (and not the pseudo entity id of an user or group).
-
-It is available under `/ngsi-ld/v1/entityAccessControl/{sub}/attrs` and can be called with a `POST` request.
-
-The expected request body is a JSON object containing NGSI-LD Relationships:
-
-```json
-{
-  "canRead": [ 
-    { 
-      "type": "Relationship", 
-      "object": "entityId1",
-      "datasetId": "urn:ngsi-ld:Dataset:01"
-    },
-    { 
-      "type": "Relationship", 
-      "object": "entityId2",
-      "datasetId": "urn:ngsi-ld:Dataset:02"
-    }
-  ],
-  "canWrite": [
-    …
-  ],
-  "canAdmin": [
-    …
-  ],
-}
-```
-
-Only `canRead` and `canWrite` and `canAdmin` attributes are allowed by this operation.
-
-It returns:
-
-- 204 if all operations succeeded
-- 207 if some failed (typically insufficient rights to perform the operation)
-
-### Remove rights on an entity for a Stellio User
-
-This endpoint allows an user to remove rights of an user (or group) on an entity it is admin or owner of.
-
-As when adding rights, the user or group whose the right is to be removed is identified by its `sub` (and not by the pseudo entity id of an user or group). It is necessary to provide the `entity_id` of the target entity. Removing the ownership of an user on an entity is not permitted.
-
-It is available under `/ngsi-ld/v1/entityAccessControl/{sub}/attrs/{entityId}` and can be called with a `DELETE` request.
-
-It returns 204 if the operation succeeded.
-
 
 ## Delete entities owned by Stellio User if said user is deleted
 
