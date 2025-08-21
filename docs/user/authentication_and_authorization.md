@@ -34,8 +34,8 @@ The permissions are represented by a `Permission` data type.
   "type" : "Permission",
   "target" : {
     "id" : "my:entity:id",
-    "type" : ["CompactedType1", "CompactedType2"],
-    "scope" :  "my/scope"
+    "types" : ["CompactedType1", "CompactedType2"],
+    "scopes" :  "my/scope"
   },
   "assignee" : "subjectID", 
   "assigner": "subjectID",
@@ -50,16 +50,31 @@ The following properties are used:
 - "id" : a unique identifier of the permission (should be a URI)
 - "type" : should always be "Permission"
 - "target" :
-  - "id"     : id of the entity the permission gives right to
-  - "type"   : not implemented yet
-  - "scope"  : not implemented yet
+  - "id" :
+    - an id of an existing entity
+    - the permission gives right to the entity with the specified id  
+    - can only be specified if types and scopes are null
+  - "types" :
+    - a type or a list of types
+    - the permission gives right to entities having at least one of specified types.
+    - if null the permission is considered for every types
+    - can only be specified if id is null
+  - "scopes" :
+    - a scope or a list of scopes
+    - the permission gives right to entities having at least one of specified scopes.
+    - if null the permission is considered for every scopes
+    - you can specify '@none' for the default scopes
+    - can only be specified if id is null
 - "assignee" : id of the subject (group or user) getting the permission. If null the permission is considered to be for everyone
 - "assigner" : id of the creator
 - "action"   : can be "read", "write", "admin" and "own" ("own" is created by the broker at entity creation, you can't add, modify or delete "own" permissions)
 
+A permission targeting types and scopes gives right to entities having a matching type **AND** a matching scope 
+
 ### Permission provision
 
-To be able to create, update or delete a permission you need to be administrator of the target entity of the permission.
+To be able to create, update or delete a permission you need to be administrator of the target of the permission.
+You can't combine multiple admin permission when provisioning permissions. (ie: if you have an admin permission on type A and one on type B you can't create a permission on type [A,B])
 
 #### Special business rules
 - modifying or creating a permission with the "own" action is forbidden
