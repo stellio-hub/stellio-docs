@@ -177,7 +177,7 @@ You can filter the requested permissions with the following query parameters:
 
  - action=read to get the permissions giving the right to read
    - the default value is admin
-   - also return the autho
+   - also return the actions including the requested action (i.e requesting write permissions also return admin and own permissions)
 
  - targetType=MyType to get the permissions targeting entities matching the corresponding type (note: the field support complex entity type selection as defined in section 4.17 of the specification)
 
