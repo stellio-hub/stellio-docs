@@ -57,12 +57,12 @@ The following properties are used:
   - "types" :
     - a type or a list of types
     - the permission gives right to entities having at least one of specified types.
-    - if null the permission is considered for every types
+    - if null the permission is considered to be for every types
     - can only be specified if id is null
   - "scopes" :
     - a scope or a list of scopes
     - the permission gives right to entities having at least one of specified scopes.
-    - if null the permission is considered for every scopes
+    - if null the permission is considered to be for every scopes
     - you can specify '@none' to target the entities with no scope
     - can only be specified if id is null
 - "assignee" : id of the subject (group or user) getting the permission. If null the permission is considered to be for everyone
@@ -71,10 +71,12 @@ The following properties are used:
 
 A permission targeting types and scopes gives right to entities having a matching type **AND** a matching scope 
 
+To avoid security issues and keep computing time low, you can’t combine multiple permissions.
+For example, if you gain admin rights on type `A` and `B` from different permission, you can't create or see permission on type `[A,B]`
+
 ### Permission provision
 
 To be able to create, update or delete a permission you need to be administrator of the target of the permission.
-You can't combine multiple admin permission. (ie: if you gain admin right on type A and B from different permission, you can't create a permission on type [A,B])
 
 #### Special business rules
 - modifying or creating a permission with the "own" action is forbidden
