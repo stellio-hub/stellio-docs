@@ -20,6 +20,11 @@ It currently supports the following two values (more may be added in the future)
 - `read`: any authenticated user can read the entity
 - `write`: any authenticated user can update the entity (it of course implies the `read` right)
 
+## admin role
+
+Stellio defines the `stellio-admin` role. If a user has this role, they are considered a global administrator and can perform any operation on the broker.
+When non `stellio-admin` users need to perform operations on the broker, an administrator must grant them the necessary permissions.
+
 ## Endpoints for permission management
 
 Stellio exposes endpoints that help in managing permissions on entities (and soon on entities types and scopes) inside the context broker.
