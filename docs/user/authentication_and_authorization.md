@@ -110,7 +110,9 @@ To be able to create, update or delete a permission you need to be administrator
 
 -  PATCH /auth/permissions/{id}
 
-Note: modifying a permission will make you the new assigner of this permission. You can’t put someone else than you as an assigner.
+Note: 
+- modifying a permission will make you the new assigner of this permission. You can’t put someone else than you as an assigner.
+- If you specify a target it will be taken entirely and replace the old target.
 
 #### Delete a permission
 
