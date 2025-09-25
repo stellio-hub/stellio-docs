@@ -20,14 +20,14 @@ It currently supports the following two values (more may be added in the future)
 - `read`: any authenticated user can read the entity
 - `write`: any authenticated user can update the entity (it of course implies the `read` right)
 
-## admin role
+## Admin role
 
 Stellio defines the `stellio-admin` role. If a user has this role, they are considered a global administrator and can perform any operation on the broker.
-When non `stellio-admin` users need to perform operations on the broker, an administrator must grant them the necessary permissions.
+When non `stellio-admin` users need to perform operations on the broker, an administrator must first grant them the necessary permissions.
 
 ## Endpoints for permission management
 
-Stellio exposes endpoints that help in managing permissions on entities (and soon on entities types and scopes) inside the context broker.
+Stellio exposes endpoints that help in managing permissions on entities inside the context broker.
 
 The permissions are represented by a `Permission` data type.
 
@@ -52,42 +52,43 @@ The permissions are represented by a `Permission` data type.
 The properties are based on ODRL Permission class but do not respect the entire ODRL model.
 
 The following properties are used:
-- "id" : a unique identifier of the permission (should be a URI)
-- "type" : should always be "Permission"
-- "target" :
-  - "id" :
-    - an id of an existing entity
+- `id`: a unique identifier of the permission (should be a URI)
+- `type`: should always be "Permission"
+- `target`:
+  - `id`:
+    - id of an existing entity
     - the permission gives right to the entity with the specified id  
-    - can only be specified if types and scopes are null
-  - "types" :
+    - can only be specified if `types` and `scopes` are null
+  - `types`:
     - a type or a list of types
     - the permission gives right to entities having at least one of specified types.
     - if null the permission is considered to be for every types
-    - can only be specified if id is null
-  - "scopes" :
+    - can only be specified if `id` is null
+  - `scopes`:
     - a scope or a list of scopes
     - the permission gives right to entities having at least one of specified scopes.
     - if null the permission is considered to be for every scopes
-    - you can specify '@none' to target the entities with no scope
-    - can only be specified if id is null
-- "assignee" : id of the subject (group or user) getting the permission. If null the permission is considered to be for everyone
-- "assigner" : id of the creator
-- "action"   : can be "read", "write", "admin" and "own" ("own" is created by the broker at entity creation, you can't add, modify or delete "own" permissions)
+    - you can specify `@none` to target the entities with no scope
+    - can only be specified if `id` is null
+- `assignee`: id of the subject (group or user) getting the permission
+    - if null the permission is considered to be for everyone
+- `assigner`: id of the creator
+- `action`: can be "read", "write", "admin" and "own" ("own" is created by the broker at entity creation, it is not possible to add, modify or delete "own" permissions)
 
 A permission targeting types and scopes gives right to entities having a matching type **AND** a matching scope 
 
-To avoid security issues and keep computing time low, you can’t combine multiple permissions.
+To avoid security issues and keep computing time low, it is not possible to combine multiple permissions.
 For example, if you gain admin rights on type `A` and `B` from different permission, you can't create or see permission on type `[A,B]`
 
 ### Permission provision
 
-To be able to create, update or delete a permission you need to be administrator of the target of the permission.
+To be able to create, update or delete a permission, an user must be administrator of the target of the permission.
 
 #### Special business rules
-- modifying or creating a permission with the "own" action is forbidden
-- assigning the "admin" action to everyone is forbidden (ie: assignee = null)
-- creating a permission with the same assignee and target as an existing permission result in a conflict
 
+- Modifying or creating a permission with the "own" action is forbidden
+- Assigning the "admin" action to everyone is forbidden (ie: assignee = null)
+- Creating a permission with the same assignee and target as an existing permission result in a conflict
 
 #### Create a permission
 
@@ -111,8 +112,8 @@ To be able to create, update or delete a permission you need to be administrator
 -  PATCH /auth/permissions/{id}
 
 Note: 
-- modifying a permission will make you the new assigner of this permission. You can’t put someone else than you as an assigner.
-- If you specify a target it will be taken entirely and replace the old target.
+- Modifying a permission will make you the new assigner of this permission. It is not possible to put someone else than you as an assigner.
+- If a target is specified, it will entirely replace the previous target.
 
 #### Delete a permission
 
@@ -139,31 +140,33 @@ You can only access permissions that are assigned to you or permissions targetin
 }
 ```
 
-You can ask to retrieve the entity and the assignee information in the same request by adding `details=true` in the query parameters.
-In addition you can filter what property of the target entity you want to retrieve by adding `detailsPick=attr1`
+You can ask to retrieve the entity and assignee information in the same request by adding `details=true` in the query parameters.
+In addition you can filter what property of the target entity you want to retrieve by adding `detailsPick=attr1`.
 
 The result will look like this:
 
 ```json
 {
-  "action" : "read",
-  "assignee" : {
-    "subjectId":"55e64faf-4bda-41cc-98b0-195874cefd29",
-    "subjectType":"GROUP",
-    "subjectInfo":{"name":"Stellio Team"}
+  "action": "read",
+  "assignee": {
+    "subjectId": "55e64faf-4bda-41cc-98b0-195874cefd29",
+    "subjectType": "GROUP",
+    "subjectInfo": {
+      "name": "Stellio Team"
+    }
   },
-  "assigner" : {
-    "subjectId":"91e64bcf-c6da-zt1d-ar70-164f74ce5d75",
-    "subjectType":"USER",
+  "assigner": {
+    "subjectId": "91e64bcf-c6da-zt1d-ar70-164f74ce5d75",
+    "subjectType": "USER",
     "subjectInfo": {
       "username": "jeanne@dupont.io",
       "givenName": "Jeanne",
       "familyName": "Dupont"
     }
   },
-  "target" : {
-    "id" : "my:id",
-    "type" : "BeeHive",
+  "target": {
+    "id": "my:id",
+    "type": "BeeHive",
     "attr1": {
       "type": "Property",
       "value": "some value 1"
@@ -178,28 +181,21 @@ The result will look like this:
 
 You can filter the requested permissions with the following query parameters:
 
- - targetId=unr:id:1,urn:id:2 to get the permissions targeting entities with id urn:id:1 and urn:id:2
-
- - assignee=my:assignee to get the permissions assigned to “my:assignee”
-
- - assigner=my:assigner to get the permissions created by “my:assigner”
-
- - action=read to get the permissions giving the right to read
+ - `targetId=urn:id:1,urn:id:2` to get the permissions targeting entities with id urn:id:1 and urn:id:2
+ - `targetType=MyType` to get the permissions targeting entities matching the corresponding type (note: the field support complex entity type selection as defined in section 4.17 of the specification)
+ - `assignee=my:assignee` to get the permissions assigned to “my:assignee”
+ - `assigner=my:assigner` to get the permissions created by “my:assigner”
+ - `action=read` to get the permissions giving the right to read
    - the default value is admin
    - also return the actions including the requested action (i.e requesting write permissions also return admin and own permissions)
-
- - targetType=MyType to get the permissions targeting entities matching the corresponding type (note: the field support complex entity type selection as defined in section 4.17 of the specification)
 
 You can ask to retrieve the entity and the assignee information in the same request by adding `details=true` in the query parameters.
 In addition you can filter what property of the target entity you want to retrieve by adding `detailsPick=attr1`
 
 Other parameter:
- - sysAttrs=true  include createdAt and modifiedAt properties
+ - `sysAttrs=true` to include `createdAt` and `modifiedAt` properties
 
-This endpoint supports the usual pagination parameters. They are functionally identical to the query entities operation :
- - count
- - limit
- - offset
+This endpoint supports the usual pagination parameters (`count`, `limit`, `offset`). They are functionally identical to the query entities operation.
 
 #### Query the permissions assigned to you
 
