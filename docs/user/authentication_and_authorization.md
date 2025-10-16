@@ -52,6 +52,7 @@ The permissions are represented by a `Permission` data type.
 The properties are based on ODRL Permission class but do not respect the entire ODRL model.
 
 The following properties are used:
+
 - `id`: a unique identifier of the permission (should be a URI)
 - `type`: should always be "Permission"
 - `target`:
@@ -112,6 +113,7 @@ To be able to create, update or delete a permission, an user must be administrat
 -  PATCH /auth/permissions/{id}
 
 Note: 
+
 - Modifying a permission will make you the new assigner of this permission. It is not possible to put someone else than you as an assigner.
 - If a target is specified, it will entirely replace the previous target.
 
@@ -181,18 +183,19 @@ The result will look like this:
 
 You can filter the requested permissions with the following query parameters:
 
- - `targetId=urn:id:1,urn:id:2` to get the permissions targeting entities with id urn:id:1 and urn:id:2
- - `targetType=MyType` to get the permissions targeting entities matching the corresponding type (note: the field support complex entity type selection as defined in section 4.17 of the specification)
- - `assignee=my:assignee` to get the permissions assigned to “my:assignee”
- - `assigner=my:assigner` to get the permissions created by “my:assigner”
- - `action=read` to get the permissions giving the right to read
-   - the default value is admin
-   - also return the actions including the requested action (i.e requesting write permissions also return admin and own permissions)
+- `targetId=urn:id:1,urn:id:2` to get the permissions targeting entities with id urn:id:1 and urn:id:2
+- `targetType=MyType` to get the permissions targeting entities matching the corresponding type (note: the field support complex entity type selection as defined in section 4.17 of the specification)
+- `assignee=my:assignee` to get the permissions assigned to “my:assignee”
+- `assigner=my:assigner` to get the permissions created by “my:assigner”
+- `action=read` to get the permissions giving the right to read
+    - the default value is admin
+    - also return the actions including the requested action (i.e requesting write permissions also return admin and own permissions)
 
 You can ask to retrieve the entity and the assignee information in the same request by adding `details=true` in the query parameters.
 In addition you can filter what property of the target entity you want to retrieve by adding `detailsPick=attr1`
 
 Other parameter:
+
  - `sysAttrs=true` to include `createdAt` and `modifiedAt` properties
 
 This endpoint supports the usual pagination parameters (`count`, `limit`, `offset`). They are functionally identical to the query entities operation.
