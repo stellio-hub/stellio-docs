@@ -72,7 +72,8 @@ The following properties are used:
     - you can specify `@none` to target the entities with no scope
     - can only be specified if `id` is null
 - `assignee`: id of the subject (group or user) getting the permission
-    - if null the permission is considered to be for everyone
+  - If set to `urn:ngsi-ld:Subject:authenticated` the permission is considered to be for any authenticated subject
+  - If the option `application.authentication.accept.public.permission` is set to true, you can specify assignee = `urn:ngsi-ld:Subject:public` to make a permission public
 - `assigner`: id of the creator
 - `action`: can be "read", "write", "admin" and "own" ("own" is created by the broker at entity creation, it is not possible to add, modify or delete "own" permissions)
 
@@ -88,7 +89,8 @@ To be able to create, update or delete a permission, an user must be administrat
 #### Special business rules
 
 - Modifying or creating a permission with the "own" action is forbidden
-- Assigning the "admin" action to everyone is forbidden (ie: assignee = null)
+- Combining the "admin" action with an authenticated assignee is forbidden (ie: assignee = `urn:ngsi-ld:Subject:authenticated`)
+- Combining a non "read" action with a public assignee is forbidden (ie: assignee = `urn:ngsi-ld:Subject:public`)
 - Creating a permission with the same assignee and target as an existing permission result in a conflict
 
 #### Create a permission
