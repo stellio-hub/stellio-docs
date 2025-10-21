@@ -56,21 +56,21 @@ The following properties are used:
 - `id`: a unique identifier of the permission (should be a URI)
 - `type`: should always be "Permission"
 - `target`:
-  - `id`:
-    - id of an existing entity
-    - the permission gives right to the entity with the specified id  
-    - can only be specified if `types` and `scopes` are null
-  - `types`:
-    - a type or a list of types
-    - the permission gives right to entities having at least one of specified types.
-    - if null the permission is considered to be for every types
-    - can only be specified if `id` is null
-  - `scopes`:
-    - a scope or a list of scopes
-    - the permission gives right to entities having at least one of specified scopes.
-    - if null the permission is considered to be for every scopes
-    - you can specify `@none` to target the entities with no scope
-    - can only be specified if `id` is null
+    - `id`:
+        - id of an existing entity
+        - the permission gives right to the entity with the specified id  
+        - can only be specified if `types` and `scopes` are null
+    - `types`:
+        - a type or a list of types
+        - the permission gives right to entities having at least one of specified types.
+        - if null the permission is considered to be for every types
+        - can only be specified if `id` is null
+    - `scopes`:
+        - a scope or a list of scopes
+        - the permission gives right to entities having at least one of specified scopes.
+        - if null the permission is considered to be for every scopes
+        - you can specify `@none` to target the entities with no scope
+        - can only be specified if `id` is null
 - `assignee`: id of the subject (group or user) getting the permission
     - if null the permission is considered to be for everyone
 - `assigner`: id of the creator
