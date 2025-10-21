@@ -73,7 +73,7 @@ The following properties are used:
     - can only be specified if `id` is null
 - `assignee`: id of the subject (group or user) getting the permission
     - if set to `urn:ngsi-ld:Subject:authenticated`, the permission applies to any authenticated subject
-    - if the option `application.authentication.accept.public.permission` is set to true, you can set assignee to `urn:ngsi-ld:Subject:public` to allow public access on the specified target
+    - if the option `application.authentication.allow-public-permission` is set to true, you can set assignee to `urn:ngsi-ld:Subject:public` to allow public access on the specified target
 - `assigner`: id of the creator
 - `action`: can be "read", "write", "admin" and "own" ("own" is created by the broker at entity creation, it is not possible to add, modify or delete "own" permissions)
 
