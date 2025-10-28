@@ -34,7 +34,7 @@ The provided Docker image extends the official Keycloak Docker image to bundle i
 
 - An event listener that propagates provisioning events to the Kafka message broker used by Stellio
 - An account notifier that sends an email to the realm admins whenever a new account is created
-- A metrics listener that exposes an endpoint that can be consumed by Prometheus
+- A metrics listener that exposes an endpoint that can be consumed by Prometheus (https://github.com/aerogear/keycloak-metrics-spi)
 
 To start with, you can use this sample Docker compose file (do not forget to create a `.env` file with the environment variables used in the docker compose file):
 
@@ -42,11 +42,11 @@ To start with, you can use this sample Docker compose file (do not forget to cre
 services:
   keycloak:
     container_name: keycloak
-    image: easyglobalmarket/keycloak:25.0.2
+    image: easyglobalmarket/keycloak:26.3.5
     restart: always
     environment:
-      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
-      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KC_BOOTSTRAP_ADMIN_USERNAME=${KEYCLOAK_ADMIN}
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
       - KC_DB_URL_HOST=postgres
       - KC_DB_URL_DATABASE=${KEYCLOAK_DB_DATABASE}
       - KC_DB_USERNAME=${KEYCLOAK_DB_USERNAME}
@@ -67,6 +67,8 @@ services:
     ports:
       # Using a different port than the ones used by Stellio to avoid conflicts when deployed on the same host
       - 9080:8080
+      # Health checks
+      - 9000:9000
     depends_on:
       - postgres
     command: "start-dev"
@@ -110,7 +112,7 @@ Please note that for a production deployment, it is recommended to setup a certi
 
 ### Start Keycloak
 
-```
+```sh
 docker compose up -d
 ```
 
@@ -131,7 +133,7 @@ Stellio natively interprets two specific Realm roles that must first be created 
 
 ### Configure Keycloak event listener
 
-Go to the Realm settings > Events section and, in the Event listeners field, add `stellioEventListener`.
+Go to the Realm settings > Events section and, in the Event listeners field, add `stellioEventListener`, `NotifyAccountEventLister` (to be notified of new accounts, the notification is sent to realm admins), and `metrics-listener` (if integrated with Prometheus)
 
 ![](images/keycloak_events_configuration.png)
 
@@ -141,7 +143,7 @@ Finally, on Stellio side, activate authentication and configure the Keycloak URL
 
 In the `.env` file, update the following environment variables:
 
-```
+```properties
 STELLIO_AUTHENTICATION_ENABLED=true
 
 APPLICATION_TENANTS_0_ISSUER=http://{keycloak_ip}:9080/realms/{realm_name}
@@ -149,7 +151,7 @@ APPLICATION_TENANTS_0_ISSUER=http://{keycloak_ip}:9080/realms/{realm_name}
 
 Then restart Stellio:
 
-```
+```sh
 docker compose up -d
 ```
 
@@ -158,7 +160,7 @@ docker compose up -d
 To validate the configuration is fully working, you can create a client in Keycloak and then create an entity in Stellio using this client:
 
 - Create a client in Keycloak
-  - Activate client authentication
+  - Enable client authentication
   - Select the "Service accounts roles" authentication flow
   - Do not set any redirect URIs
 - In the "Service account roles" tab, assign the `stellio-creator` realm role
@@ -189,7 +191,7 @@ While creating and configuring users, groups and clients in Keycloak, the follow
 ```json
 {
   "operationType":"ENTITY_CREATE",
-  "tenantName": "urn:ngsi-ld:tenant:stellio",
+  "tenantName": "urn:ngsi-ld:tenant:default",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "entityTypes":["User"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\",\"type\":\"User\",\"username\":{\"type\":\"Property\",\"value\":\"user@mail.com\"},\"roles\":{\"type\":\"Property\",\"value\":\"stellio-creator\"}}",
@@ -202,7 +204,7 @@ While creating and configuring users, groups and clients in Keycloak, the follow
 ```json
 {
   "operationType":"ENTITY_CREATE",
-  "tenantName": "urn:ngsi-ld:tenant:stellio",
+  "tenantName": "urn:ngsi-ld:tenant:default",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "entityTypes":["Group"],
   "operationPayload":"{\"id\":\"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv\",\"type\":\"Group\",\"name\":{\"type\":\"Property\",\"value\":\"Group name\"}}",
@@ -229,8 +231,8 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 
 ```json
 {
-  "operationType":"ATTRIBUTE_APPEND",
-  "tenantName": "urn:ngsi-ld:tenant:stellio",
+  "operationType":"ATTRIBUTE_CREATE",
+  "tenantName": "urn:ngsi-ld:tenant:default",
   "entityId":"urn:ngsi-ld:Client:ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj",
   "entityTypes":["Client"],
   "attributeName":"roles",
@@ -244,8 +246,8 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 
 ```json
 {
-  "operationType":"ATTRIBUTE_APPEND",
-  "tenantName": "urn:ngsi-ld:tenant:stellio",
+  "operationType":"ATTRIBUTE_CREATE",
+  "tenantName": "urn:ngsi-ld:tenant:default",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "entityTypes":["User"],
   "attributeName":"isMemberOf",
@@ -261,11 +263,12 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ATTRIBUTE_DELETE",
-  "tenantName": "urn:ngsi-ld:tenant:stellio",
+  "tenantName": "urn:ngsi-ld:tenant:default",
   "entityId":"urn:ngsi-ld:User:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "entityTypes":["User"],
   "attributeName":"isMemberOf",
   "datasetId":"urn:ngsi-ld:Dataset:isMemberOf:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
+  "previousPayload": "",
   "updatedEntity":"",
   "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
@@ -275,12 +278,13 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 
 ```json
 {
-  "operationType":"ATTRIBUTE_REPLACE",
-  "tenantName": "urn:ngsi-ld:tenant:stellio",
+  "operationType":"ATTRIBUTE_UPDATE",
+  "tenantName": "urn:ngsi-ld:tenant:default",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "entityTypes":["Group"],
   "attributeName":"name",
   "operationPayload":"{\"type\":\"Property\",\"value\":\"New group name\"}",
+  "previousPayload": "",
   "updatedEntity":"",
   "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
@@ -291,9 +295,10 @@ An array of realm roles is sent, it is empty if the subject has no longer a real
 ```json
 {
   "operationType":"ENTITY_DELETE",
-  "tenantName": "urn:ngsi-ld:tenant:stellio",
+  "tenantName": "urn:ngsi-ld:tenant:default",
   "entityId":"urn:ngsi-ld:Group:zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv",
   "entityTypes":["Group"],
+  "previousEntity": "",
   "contexts":["https://easy-global-market.github.io/ngsild-api-data-models/authorization/jsonld-contexts/authorization.jsonld","https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.7.jsonld"]
 }
 ```
