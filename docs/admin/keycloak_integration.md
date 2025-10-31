@@ -22,11 +22,27 @@ Configuration of Keycloak is not described here, as it is well documented on the
 
 In order to connect Stellio with Keycloak, the following steps have to be followed:
 
+- Choose the correct Keycloak version
 - Configure and run the [Keycloak Docker image provided by EGM](https://hub.docker.com/repository/docker/easyglobalmarket/keycloak)
 - Create a realm in Keycloak
 - Create the builtin roles known and used by Stellio
 - Configure Keycloak to propagate user, group and client events to Stellio
 - Activate and configure authentication in Stellio
+
+### Choose the correct version of Keycloak
+
+As there are sometimes modifications in the Kafka plugin that transmits user-related events to Stellio 
+(mainly related to modifications of the Stellio internal event model), some versions of Stellio require 
+a minimal version of Keycloak for the communication to happen correctly.
+
+The following table summarizes these compatibility requirements:
+
+| Stellio version         | Keycloak version                |
+| ----------------------- | ------------------------------- |
+| 2.25.0                  | 26.3.4                          |
+| 2.22.0                  | 26.2.0                          |
+| 2.19.0                  | 26.0.7                          |
+
 
 ### Use the Keycloak Docker image by EGM
 
