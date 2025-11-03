@@ -91,7 +91,8 @@ To be able to create, update or delete a permission, an user must be administrat
 - Modifying or creating a permission with the "own" action is forbidden
 - Combining the "admin" action with the special "any authenticated" assignee (`urn:ngsi-ld:Subject:authenticated`) is forbidden
 - Combining a non "read" action with the special "public" assignee (`urn:ngsi-ld:Subject:public`) is forbidden
-- Creating a permission with the same assignee and target as an existing permission result in a conflict
+- Creating a permission with the same assignee, action and target as an existing permission will be considered redundant
+and will result in a 303 See Other response
 
 #### Create a permission
 
