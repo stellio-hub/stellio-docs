@@ -24,13 +24,14 @@ If running Stellio in Kubernetes, it can be configured in the deployments:
 
 If sending HTTP requests with a body having a large size, you may have to increase the max allowed size (which is by default set to 2Mb).
 
-It may be done by configuring the `search.payload-max-body-size` property. It has to be done in search-service.
+It may be done by configuring the `spring.http.codecs.max-in-memory-size` property (see https://docs.spring.io/spring-boot/appendix/application-properties/index.html#application-properties.web.spring.http.codecs.max-in-memory-size). It has to be done in search-service.
 
 If running Stellio from `docker-compose`, it can be configured in the environment section of the service:
 
 ```yaml
     environment:
-      - SEARCH_PAYLOAD-MAX-BODY-SIZE=51200000
+      # Allow 10Mb payloads
+      - SPRING_HTTP_CODECS_MAX-IN-MEMORY-SIZE=10485760
 ```
 
 ## Increase the default and maximum limit for pagination
