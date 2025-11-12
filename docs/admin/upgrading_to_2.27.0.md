@@ -1,6 +1,6 @@
 # Upgrading to 2.27.0
 
-This note describes the necessary steps to upgrade to Stellio 2.11.0
+This note describes the necessary steps to upgrade to Stellio 2.27.0
 
 ## Status code when creating a permission
 
