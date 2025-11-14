@@ -75,12 +75,17 @@ The following properties are used:
     - if set to `urn:ngsi-ld:Subject:authenticated`, the permission applies to any authenticated subject
     - if the option `application.authentication.allow-public-permission` is set to true, you can set assignee to `urn:ngsi-ld:Subject:public` to allow public access on the specified target
 - `assigner`: id of the creator
-- `action`: can be "read", "write", "admin" and "own" ("own" is created by the broker at entity creation, it is not possible to add, modify or delete "own" permissions)
+- `action`: can be "read", "write", "admin" and "own"
 
 A permission targeting types and scopes gives right to entities having a matching type **AND** a matching scope 
 
 To avoid security issues and keep computing time low, it is not possible to combine multiple permissions.
 For example, if you gain admin rights on type `A` and `B` from different permission, you can't create or see permission on type `[A,B]`
+
+#### Owner permission
+An owner permission is created when a new entity or scope is created.
+This permission give the same right as an admin permission except you can't add, modify or delete "own" permissions
+
 
 ### Permission provision
 
