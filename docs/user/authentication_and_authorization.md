@@ -83,8 +83,8 @@ To avoid security issues and keep computing time low, it is not possible to comb
 For example, if you gain admin rights on type `A` and `B` from different permission, you can't create or see permission on type `[A,B]`
 
 #### Owner permission
-An owner permission is created when a new entity or scope is created.
-This permission give the same right as an admin permission except you can't add, modify or delete "own" permissions
+An owner permission is created when an entity is created or when a not already existing scope is added to an entity (at creation or modification time).
+This permission gives the same right as an admin permission except you cannot add, modify or delete "own" permissions.
 
 
 ### Permission provision
